@@ -102,73 +102,11 @@
 解决方案：轻量级的安全容器运行时RunD
 实现效果：每秒可以启动200万个安全容器，可在384GB节点上部署超2500个安全容器
 </code></pre>
-<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><pre><code>安全容器引入背景：一般FaaS使用Docker容器提供进程级别的隔离，这无法防止特权升级、信息泄露侧通道等，由此引入了安全容器，可实现传统虚拟机级别的隔离
-
-安全容器的特点：使用轻量级的microVM，运行normal container
-
-安全容器组成：rootfs（一个文件系统，为用户代码提供执行环境，由主机创建传给容器运行时）、cgroup（在主机端，为安全与容器分配资源）
-
-安全容器存在的问题：1）在许多容器同时启动，rootfs会产生长延迟或高CPU开销 2）同时启动多个容器会在主机端带来大量cgroup操作，但是cgroup操作是串行的 3）标准linux内核太繁重 4）rootfs基于块的解决方案在主从之间生成相同的页面缓存，导致重复的内存开销 5）CFS完全公平调度策略遍历cgroups在高密度部署时导致显著调度开销
-
-解决方案：RundD——轻量级的安全容器runtime
-
-论文贡献：
-    1）高密度部署、高并发启动的安全容器 瓶颈分析：
-        i）rootfs storage
-        ii）microVM memory footprint
-        iii）overhead of cgroups
-    2）客户端到主机（guest-to-host）的解决方案：
-        i）读写拆分的rootfs实现
-        ii）通过预修补的内核镜像压缩客户端kernel，并提高kernel sharing
-        iii）host段轻量级cgroup设计、基于重命名的cgroup池管理
-    3）轻量级的serverless runtime——RunD
-</code></pre>
-<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><pre><code>memory footprint：内存占用
-</code></pre>
-<h2 id="1-现有安全容器模型"><a href="#1-现有安全容器模型" class="headerlink" title="1.现有安全容器模型"></a>1.现有安全容器模型</h2><pre><code>1）multi-container-per-VM：
-    一个microVM放置同一function的所有容器，这些容器共享虚拟机的操作系统，可实现不同函数间的隔离。由于每个函数需要的容器数目不同，因此会造成内存碎片
-2）single-conrainer-per-VM（本文采用）：
-    一个microVM放置一个容器，没有内存碎片，但是microVM本身的内存开销很大
-</code></pre>
-<h2 id="2-现有安全容器问题"><a href="#2-现有安全容器问题" class="headerlink" title="2.现有安全容器问题"></a>2.现有安全容器问题</h2><pre><code>1）高并发需求：由于serverless函数调用大多很短，因此存在大量突发请求，很容易耗尽prewarm container。所以有重新快速并行启动容器的需求
-2）高密度部署需求：由于大多数serverless函数调用所需要的内存空间很小，所以减小每个函数调用的内存空间消耗，增大部署密度，可提高资源利用率
-</code></pre>
-<h1 id="问题分析与见解"><a href="#问题分析与见解" class="headerlink" title="问题分析与见解"></a>问题分析与见解</h1><pre><code>总的来说：1）创建rootfs和cgroups的低效，导致了容器启动的低并发
-         2）高的内存占用和调度开销，导致了容器的低密度部署
-</code></pre>
-<h2 id="1-容器-rootfs-storage瓶颈"><a href="#1-容器-rootfs-storage瓶颈" class="headerlink" title="1.容器 rootfs storage瓶颈"></a>1.容器 rootfs storage瓶颈</h2><pre><code>rootfs暴露给容器运行时的两种方式：filesystem sharing（9pfs、virtio-fs）、block device（virtio-blk）
-9pfs综合性能最差
-virtio-blk随机/顺序写性能最好，但是不支持主从操作系统之间共享page cache，会导致重复的page cache
-virtio-fs解决了重复page cache的问题，但是其随机/顺序写性能较差
-可能的解决方案：使用virtio-fs去支持读部分的页缓存共享，使用virtio-blk进行写。“还需要一个方案来解决rootfs的重复可写部分”——好像没提
-</code></pre>
-<h2 id="2-每个容器的-high-memory-overhead"><a href="#2-每个容器的-high-memory-overhead" class="headerlink" title="2.每个容器的 high memory overhead"></a>2.每个容器的 high memory overhead</h2><pre><code>memory overhead定义：除了用户函数占用的内存外，容器中的其他组件的开销就是内存额外开销
-memory overhead的解决方案：microVM template
-弊端：code self-modifying减少了template的可共享内存。
-解决：因此，减少用户代码中的自修改代码是值得研究的，如果这些代码不是serverless场景下必须的
-</code></pre>
-<h2 id="3-客户端的-high-cgroups-overhead"><a href="#3-客户端的-high-cgroups-overhead" class="headerlink" title="3.客户端的 high cgroups overhead"></a>3.客户端的 high cgroups overhead</h2><pre><code>Cgroup：是为资源控制和进程抽象设计的
-serverless场景下频繁地创建与回收主机对cgroup机制提出了挑战
-1）高并发场景下，反直觉的是，线程数目越多，cgroups的操作延迟越大。原因是linux内核设置了几个全局锁，来序列化cgroups操作；2）此外，CFS的调度方式会迭代所有cgroup进程，频繁地上下文切换也是一个瓶颈
-解决：简化cgroup设计，减少互斥锁引入的临界区是消除主机端开销的基本方案
-</code></pre>
-<h1 id="RunD方法"><a href="#RunD方法" class="headerlink" title="RunD方法"></a>RunD方法</h1><h2 id="1-设计概览"><a href="#1-设计概览" class="headerlink" title="1.设计概览"></a>1.设计概览</h2><pre><code>RunD = （guest domain：condensed kernel + pre-patched image） + （host domain：read/write splitting-based rootfs + lightweight cgroup pool）
-</code></pre>
-<h2 id="2-高效容器rootfs-mapping"><a href="#2-高效容器rootfs-mapping" class="headerlink" title="2.高效容器rootfs mapping"></a>2.高效容器rootfs mapping</h2><pre><code>设计初衷：现有安全容器在传统IaaS和FaaS之间没有区别，而rootfs是为了持久存储设计的，在FaasS场景下存在不足
-解决方案：只读层由virtio-fs处理，并且在同一个node上由所有vm共享，只写层由virtio-blk处理。这样一来既可以充分共享pagecahce，又可以将繁重的写任务交给virtio-blk。
-    只读层存储在host中，启动时借助overlay技术，可以很快；写层原有处理方式是OS为每个sandbox准备一个逻辑卷，这是最消耗时间的过程，逻辑卷的目的是持久性存储，但作者认为这在serverless中是没有必要的，中间数据不必保存，function结束后，数据也可以不要，因此采用易失性写层的解决方案
-
-解决方案可能的不足：数据不持久化，一直存在内存中，当数据量很大的时候，是不是会增大内存开销呢
-                  很多优化工作就是取保存中间状态，这样处理是否也有弊端
-</code></pre>
-<h2 id="3-压缩和预修补的guest-kernel"><a href="#3-压缩和预修补的guest-kernel" class="headerlink" title="3.压缩和预修补的guest kernel"></a>3.压缩和预修补的guest kernel</h2><pre><code>1）精简kernel
-2）将自修改后的kernel只作为模板（原因：code self-modifying减少了template的可共享内存）
-    调查显示，在内存中访问了10012KB的只读代码和数据，但其中7928KB在boot期间被修改（linux内核非常依赖自修改代码来提高性能）因此当时用mmap来减少内核映像文件的内存消耗时，自修改代码降低了效率。
-</code></pre>
-<h2 id="4-轻量级cgroup和cgroup-pool"><a href="#4-轻量级cgroup和cgroup-pool" class="headerlink" title="4.轻量级cgroup和cgroup pool"></a>4.轻量级cgroup和cgroup pool</h2><pre><code>1）把所有的cgroup整合到一个目录中
-2）创建cgroup池
-</code></pre>
-
+        
+          <p class="article-more-link">
+            <a href="/2023/05/28/RunD-A-Lightweight-Secure-Container-Runtime/#more">Read More</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
@@ -209,44 +147,11 @@ serverless场景下频繁地创建与回收主机对cgroup机制提出了挑战
         <p>[<a target="_blank" rel="noopener" href="https://www.usenix.org/conference/osdi18/presentation/klimovic]">https://www.usenix.org/conference/osdi18/presentation/klimovic]</a></p>
 <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><pre><code>serverless可弹性扩展、细粒度按量收费的特点，适合交互式数据分析这样的短生命周期任务。然而在执行阶段交换中间数据并非易事，原因是serverless任务之间通信困难。通常采取将中间数据存储在远端的方式，但现有的存储系统本不是为了serverless的特点（弹性、高性能、低开销）而设计的。于是，本文提出了Pocket，一个弹性、分布式、高性能、低开销、可在多个维度(CPU核数、带宽、内存大小等)动态调整资源利用，其可以在减少60%开销的情况下，达到和ElasticCache Redis近似的性能。
 </code></pre>
-<h1 id="绪论"><a href="#绪论" class="headerlink" title="绪论"></a>绪论</h1><pre><code>serverless可弹性伸缩、细粒度按量收费的特点，非常适合“interactive analytics”任务。这类任务的特点是：包括多个阶段，每个阶段需要数据共享。类似Spark这样的平台，通过在每个节点使用长时间运行的代理框架，利用本地存储实现中间数据交换。然而在serverless平台，没有这样的代理框架去管理本地存储，而且serverless也无法控制任务的调度以及任务放置在哪个节点。所以常使用remote storage作为介质，比如对象存储S3、数据库、分布式缓存Redis等。但是现有的存储服务不适合短生命周期的中间数据共享。对象存储和数据库目的是为了长周期、高可用的存储，而不是为了性能优化和降低开销，分布式键值存储性能很好，但是需要手动进行集群扩缩容和配置。另外，不同的存储技术选择也会影响性能与开销，使用DRAM、NVM、Flash、HDD，不同的资源配置会导致不同的结果。
-
-Pocket是一个针对serverless analyics的高效数据共享而设计的分布式数据存储平台。它提供了高吞吐量、低时延、自动资源扩缩容、智能数据存放（智能把数据存放在DRAM/Flash/disk）的特点。它使用启发式方法（考虑作业特征）来分配合适的存储介质、容量、带宽和CPU资源，以提高成本和性能效率。
-Pocket的特性来源于严格独立的分层设计：control panel：决定数据存放策略；metadata panel：管理分布式数据存放；data panel：实际存储数据
-
-ElasticCache Redis是基于DRAM键值存储，在视频分析、mapreduce sort等任务中，Pocket和ElasticCache Redis几乎达到了相同性能，但前者节省了60%的开销
-</code></pre>
-<h2 id="本文的主要贡献"><a href="#本文的主要贡献" class="headerlink" title="本文的主要贡献"></a>本文的主要贡献</h2><p>1） 分析了serverless analytics任务中“短暂数据”的关键特征，由此归纳总结了serverless中共享“短暂数据”的存储平台的需求<br>2） 提出了Pocket，目前第一个针对serverless analytics的数据共享平台。三个panel可以实现sub-second级别的响应时间、自动资源扩缩容、智能数据存放<br>3） 相比于S3存储，Pocket在短暂任务的I&#x2F;O时间上减少的4.1倍；相比于ElasticCache Redis，实现了相似的性能，但节省了约59%的空间<br>代码：[<a target="_blank" rel="noopener" href="https://github.com/stanford-mast/pocket]">https://github.com/stanford-mast/pocket]</a></p>
-<h1 id="storage-for-serverless-analytics"><a href="#storage-for-serverless-analytics" class="headerlink" title="storage for serverless analytics"></a>storage for serverless analytics</h1><ol>
-<li>临时存储要求<br>1） 对象大小变化范围很广，也要做到高性能(high performance for a wide range of object sizes)<br>临时数据的大小变化范围很广，从几百字节到几百兆字节不等。对于很大的对象，需要高吞吐量，对于很小的对象，需要低时延。临时数据存储需要对各种大小范围的数据都做到高带宽、低时延、高IOPS</li>
-</ol>
-<p>2） 自动和细粒度扩缩容<br>serverless analytics的短周期任务数量具有突发性，可能段时间内突然到来&#x2F;结束很多任务，这就要求存储平台可以在亚秒级别感知到IO需求变化，并且能够对特定资源（存储、带宽、CPU等）进行细粒度扩缩容，而且要求这种管理是平台自动进行的，不需要用户参与。</p>
-<p>3） 存储层次感知<br>临时数据存储必须做到把应用数据存放在合理的存储介质层次上，以实现良好的性能-开销平衡</p>
-<p>4） 不必高容错（fault-(in)tolerance）<br>对于长期数据，数据不可用的成本往往高于容错成本，因此在存储层次上一般会进行容错。但是分析发现，<br>①临时数据生命周期短并且容易重新生成 ②计算框架一般都有容错机制  因此临时数据可以不进行容错</p>
-<ol start="2">
-<li>现有系统分析</li>
-</ol>
-<p>名词解释：帕累托最优：从此以后，非损人不能利己</p>
-<p>1） 云存储服务<br>如S3、Google Cloud Storage、DynamoDB，这些服务将serverless的抽象扩展到了存储，只对用户使用的容量和带宽收费。但是这些服务是针对持久性存储的，不满足临时数据存储的高性能要求</p>
-<p>2）内存中的键值存储<br>如Redis和MemCached，提供低时延和高吞吐量，但是DRAM成本较高，而且需要用户手动管理和扩缩容</p>
-<p>3）Flash闪存存储<br>比如Alluxio&#x2F;Tachyon，提供高性能，并且相对DRAM降低了成本，但是仍需要用户手动管理和扩缩容</p>
-<ol start="3">
-<li>Pocket设计<br>Pocket的三个主要特点：明确独立的三层责任分离、亚秒级的响应时间、多层次存储</li>
-</ol>
-<p>1） 系统架构<br>    serverless计算是一个集群、Pocket存储是另一个集群<br>    Pocket包括controller、metadata server（s）、storage servers<br>    controller控制扩缩容、数据存放策略、负载均衡策略<br>    metadata server通过将客户端请求引导到适当的storage server来执行controller的相关策略， metadata server以block的粒度管理数据<br>2） 程序接口<br>    大体分为control functions、 metadata functions、 storage functions三类，供客户端serverless程序调用<br>3） Pocket程序的生命周期<br>①在执行serverless计算之前，先注册controller，并根据用户hints进行资源分配<br>②执行serverless计算过程中，通过接口与Pocket交互，Pocket可以动态扩缩容<br>③当serverless计算结束，取消controller注册，Pocket释放相关资源<br>4） 节点失败处理<br>    storage结点：重启serverless计算任务，恢复相关临时数据<br>    metadata结点：记录log，重放log恢复<br>    controller：通过master-slaver（未实现）</p>
-<ol start="4">
-<li>Rightsizing Resource Allocations 调整资源分配<br>包括serverless执行前的资源预分配，与severless执行中的动态资源扩缩容</li>
-</ol>
-<p>1） Rightsizing Application Allocation 调整应用程序分配<br>    i)分配内容：根据用户hints&#x2F;默认分配策略，进行资源分配，主要针对throughput、capacity、choice of storage media这三个维度的资源进行分配<br>    ii）分配策略：Pocket通过为作业生权重映射，将“作业的资源分配”，转换为“特定存储服务器上的资源分配”    权重表示放置在storage server上的作业的数据集比例<br>    权重图取决于作业的资源要求和可用的群集资源。Pocket使用在线装箱算法，该算法首先尝试在活动存储服务器上适应作业的吞吐量、容量和存储介质分配，并且仅在作业的要求无法满足时才启动新服务器。<br>2) Rightsizing the Storage Cluster 调整存储集群大小<br>    主要用于执行过程中的动态扩缩容<br>    i) 扩缩容机制<br>        结点(storage&#x2F;metadata)每秒都会给controller发送自己的统计数据，controller根据这个信息进行扩缩容<br>        主要介绍了如何分配&#x2F;删除一个storage server &#x2F; metadata server<br>        包括横向（增减server数目）和纵向（使用其他节点的闲置资源）的扩缩容<br>    ii) 扩缩容策略<br>        根据特定资源的利用率是否保持在一定范围内，决定要不要扩缩容<br>    iii） 负载均衡策略<br>        controller通过调整server在权重图中的权重，来实现负载均衡</p>
-<ol start="5">
-<li><p>实现<br>1） controller<br>基于k8s来实现storage server、metadata server的启动与销毁，他们运行在独立的Docker 容器中<br>2） metadata server &amp; storage server<br>基于Apache Crail分布式数据存储实现<br>3） storage tiers<br>DRAM、 NVMe Flash、SSD、 HDD<br>4） client library<br>Python实现</p>
-</li>
-<li><p>评估<br> 1）评估方法<br> 对比平台：S3、Redis、Pocket<br> serverless analytics任务：video analytics、MapReduce sort、distributed software compilation<br> 2）对比性能评估1<br> i）存储请求时延：pocket的DRAM与NVMe与Redis性能相近，Pocket的SSD与HDD性能也都优于S3<br> ii）累计吞吐量：<br>     在单线程时，Redis与Pocket都不如S3，但是多线程时，Pocket的DRAM与NVMe与Redis吞吐量都优于S3，且前三者性能相近；Pocket的SSD与HDD性能不如S3（具体也看带宽情况等）<br> 3）自我性能评估<br> i）增加&#x2F;删除server时间<br>     VM启动和镜像拉取时间占大头，但是也只有一次，容器启动和结点注册占小头<br> ii）不同hints下的自动扩缩容经济开销<br>     有提示情况下，相比于Redis性能相仿，但是经济成本节约很多<br> iii）有生命周期hint的好处<br>     有生命周期hint的话，可以让Pocket更迅速回收容量，从而更有效利用资源<br> 4）对比性能评估2<br> i）不同方法、不同任务的执行时间、花销对比<br>     对于不同任务，Redis和Pocket的短周期数据IO用时明显低于S3，但是S3成本最低，但是Pocket相比于Redis可以节约59%的成本</p>
-</li>
-<li><p>结论<br>Pocket只在为临时数据提供高弹性、经济高效和细粒度的存储解决方案。Pocket通过严格实现分离controller&#x2F;metadate server&#x2F;storage server的职责来实现上述目标。</p>
-</li>
-</ol>
-
+        
+          <p class="article-more-link">
+            <a href="/2023/05/28/Pocket-Ekastic-Emphemeral-Storage-for-Serverless-Analytics/#more">Read More</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
@@ -285,18 +190,6 @@ ElasticCache Redis是基于DRAM键值存储，在视频分析、mapreduce sort�
     <div class="e-content article-entry" itemprop="articleBody">
       
         <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
         
           <p class="article-more-link">
             <a href="/2023/05/28/hello-world/#more">Read More</a>
