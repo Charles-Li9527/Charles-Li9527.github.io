@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="[论文地址：https:&#x2F;&#x2F;www.usenix.org&#x2F;conference&#x2F;atc22&#x2F;presentation&#x2F;li-zijun-rund][rootfs讲解：https:&#x2F;&#x2F;blog.csdn.net&#x2F;Geffin&#x2F;article&#x2F;details&#x2F;109741226][overlayfs介绍：https:&#x2F;&#x2F;blog.csdn.net&#x2F;luckyapple1028&#x2F;article&#x2F;deta">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2023/05/28/RunD_A_Lightweight_Secure_Container_Runtime/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="[论文地址：https:&#x2F;&#x2F;www.usenix.org&#x2F;conference&#x2F;atc22&#x2F;presentation&#x2F;li-zijun-rund][rootfs讲解：https:&#x2F;&#x2F;blog.csdn.net&#x2F;Geffin&#x2F;article&#x2F;details&#x2F;109741226][overlayfs介绍：https:&#x2F;&#x2F;blog.csdn.net&#x2F;luckyapple1028&#x2F;article&#x2F;deta">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-05-28T04:50:52.407Z">
+<meta property="article:modified_time" content="2023-05-28T04:07:06.766Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-RunD_A_Lightweight_Secure_Container_Runtime" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2023/05/28/RunD_A_Lightweight_Secure_Container_Runtime/" class="article-date">
+  <time class="dt-published" datetime="2023-05-28T04:50:52.407Z" itemprop="datePublished">2023-05-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>[论文地址：<a target="_blank" rel="noopener" href="https://www.usenix.org/conference/atc22/presentation/li-zijun-rund]">https://www.usenix.org/conference/atc22/presentation/li-zijun-rund]</a><br>[rootfs讲解：<a target="_blank" rel="noopener" href="https://blog.csdn.net/Geffin/article/details/109741226]">https://blog.csdn.net/Geffin/article/details/109741226]</a><br>[overlayfs介绍：<a target="_blank" rel="noopener" href="https://blog.csdn.net/luckyapple1028/article/details/77916194]">https://blog.csdn.net/luckyapple1028/article/details/77916194]</a><br>[mmap介绍：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/366964820]">https://zhuanlan.zhihu.com/p/366964820]</a><br>[self-modifying-code介绍：<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_32820767/article/details/84895317]">https://blog.csdn.net/weixin_32820767/article/details/84895317]</a></p>
+<h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><pre><code>安全容器：将容器部署在microVM中
+现有问题：高密度容器部署和高并发容器启动的要求
+问题原因：cgroups和rootfs
+解决方案：轻量级的安全容器运行时RunD
+实现效果：每秒可以启动200万个安全容器，可在384GB节点上部署超2500个安全容器
+</code></pre>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><pre><code>安全容器引入背景：一般FaaS使用Docker容器提供进程级别的隔离，这无法防止特权升级、信息泄露侧通道等，由此引入了安全容器，可实现传统虚拟机级别的隔离
+
+安全容器的特点：使用轻量级的microVM，运行normal container
+
+安全容器组成：rootfs（一个文件系统，为用户代码提供执行环境，由主机创建传给容器运行时）、cgroup（在主机端，为安全与容器分配资源）
+
+安全容器存在的问题：1）在许多容器同时启动，rootfs会产生长延迟或高CPU开销 2）同时启动多个容器会在主机端带来大量cgroup操作，但是cgroup操作是串行的 3）标准linux内核太繁重 4）rootfs基于块的解决方案在主从之间生成相同的页面缓存，导致重复的内存开销 5）CFS完全公平调度策略遍历cgroups在高密度部署时导致显著调度开销
+
+解决方案：RundD——轻量级的安全容器runtime
+
+论文贡献：
+    1）高密度部署、高并发启动的安全容器 瓶颈分析：
+        i）rootfs storage
+        ii）microVM memory footprint
+        iii）overhead of cgroups
+    2）客户端到主机（guest-to-host）的解决方案：
+        i）读写拆分的rootfs实现
+        ii）通过预修补的内核镜像压缩客户端kernel，并提高kernel sharing
+        iii）host段轻量级cgroup设计、基于重命名的cgroup池管理
+    3）轻量级的serverless runtime——RunD
+</code></pre>
+<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><pre><code>memory footprint：内存占用
+</code></pre>
+<h2 id="1-现有安全容器模型"><a href="#1-现有安全容器模型" class="headerlink" title="1.现有安全容器模型"></a>1.现有安全容器模型</h2><pre><code>1）multi-container-per-VM：
+    一个microVM放置同一function的所有容器，这些容器共享虚拟机的操作系统，可实现不同函数间的隔离。由于每个函数需要的容器数目不同，因此会造成内存碎片
+2）single-conrainer-per-VM（本文采用）：
+    一个microVM放置一个容器，没有内存碎片，但是microVM本身的内存开销很大
+</code></pre>
+<h2 id="2-现有安全容器问题"><a href="#2-现有安全容器问题" class="headerlink" title="2.现有安全容器问题"></a>2.现有安全容器问题</h2><pre><code>1）高并发需求：由于serverless函数调用大多很短，因此存在大量突发请求，很容易耗尽prewarm container。所以有重新快速并行启动容器的需求
+2）高密度部署需求：由于大多数serverless函数调用所需要的内存空间很小，所以减小每个函数调用的内存空间消耗，增大部署密度，可提高资源利用率
+</code></pre>
+<h1 id="问题分析与见解"><a href="#问题分析与见解" class="headerlink" title="问题分析与见解"></a>问题分析与见解</h1><pre><code>总的来说：1）创建rootfs和cgroups的低效，导致了容器启动的低并发
+         2）高的内存占用和调度开销，导致了容器的低密度部署
+</code></pre>
+<h2 id="1-容器-rootfs-storage瓶颈"><a href="#1-容器-rootfs-storage瓶颈" class="headerlink" title="1.容器 rootfs storage瓶颈"></a>1.容器 rootfs storage瓶颈</h2><pre><code>rootfs暴露给容器运行时的两种方式：filesystem sharing（9pfs、virtio-fs）、block device（virtio-blk）
+9pfs综合性能最差
+virtio-blk随机/顺序写性能最好，但是不支持主从操作系统之间共享page cache，会导致重复的page cache
+virtio-fs解决了重复page cache的问题，但是其随机/顺序写性能较差
+可能的解决方案：使用virtio-fs去支持读部分的页缓存共享，使用virtio-blk进行写。“还需要一个方案来解决rootfs的重复可写部分”——好像没提
+</code></pre>
+<h2 id="2-每个容器的-high-memory-overhead"><a href="#2-每个容器的-high-memory-overhead" class="headerlink" title="2.每个容器的 high memory overhead"></a>2.每个容器的 high memory overhead</h2><pre><code>memory overhead定义：除了用户函数占用的内存外，容器中的其他组件的开销就是内存额外开销
+memory overhead的解决方案：microVM template
+弊端：code self-modifying减少了template的可共享内存。
+解决：因此，减少用户代码中的自修改代码是值得研究的，如果这些代码不是serverless场景下必须的
+</code></pre>
+<h2 id="3-客户端的-high-cgroups-overhead"><a href="#3-客户端的-high-cgroups-overhead" class="headerlink" title="3.客户端的 high cgroups overhead"></a>3.客户端的 high cgroups overhead</h2><pre><code>Cgroup：是为资源控制和进程抽象设计的
+serverless场景下频繁地创建与回收主机对cgroup机制提出了挑战
+1）高并发场景下，反直觉的是，线程数目越多，cgroups的操作延迟越大。原因是linux内核设置了几个全局锁，来序列化cgroups操作；2）此外，CFS的调度方式会迭代所有cgroup进程，频繁地上下文切换也是一个瓶颈
+解决：简化cgroup设计，减少互斥锁引入的临界区是消除主机端开销的基本方案
+</code></pre>
+<h1 id="RunD方法"><a href="#RunD方法" class="headerlink" title="RunD方法"></a>RunD方法</h1><h2 id="1-设计概览"><a href="#1-设计概览" class="headerlink" title="1.设计概览"></a>1.设计概览</h2><pre><code>RunD = （guest domain：condensed kernel + pre-patched image） + （host domain：read/write splitting-based rootfs + lightweight cgroup pool）
+</code></pre>
+<h2 id="2-高效容器rootfs-mapping"><a href="#2-高效容器rootfs-mapping" class="headerlink" title="2.高效容器rootfs mapping"></a>2.高效容器rootfs mapping</h2><pre><code>设计初衷：现有安全容器在传统IaaS和FaaS之间没有区别，而rootfs是为了持久存储设计的，在FaasS场景下存在不足
+解决方案：只读层由virtio-fs处理，并且在同一个node上由所有vm共享，只写层由virtio-blk处理。这样一来既可以充分共享pagecahce，又可以将繁重的写任务交给virtio-blk。
+    只读层存储在host中，启动时借助overlay技术，可以很快；写层原有处理方式是OS为每个sandbox准备一个逻辑卷，这是最消耗时间的过程，逻辑卷的目的是持久性存储，但作者认为这在serverless中是没有必要的，中间数据不必保存，function结束后，数据也可以不要，因此采用易失性写层的解决方案
+
+解决方案可能的不足：数据不持久化，一直存在内存中，当数据量很大的时候，是不是会增大内存开销呢
+                  很多优化工作就是取保存中间状态，这样处理是否也有弊端
+</code></pre>
+<h2 id="3-压缩和预修补的guest-kernel"><a href="#3-压缩和预修补的guest-kernel" class="headerlink" title="3.压缩和预修补的guest kernel"></a>3.压缩和预修补的guest kernel</h2><pre><code>1）精简kernel
+2）将自修改后的kernel只作为模板（原因：code self-modifying减少了template的可共享内存）
+    调查显示，在内存中访问了10012KB的只读代码和数据，但其中7928KB在boot期间被修改（linux内核非常依赖自修改代码来提高性能）因此当时用mmap来减少内核映像文件的内存消耗时，自修改代码降低了效率。
+</code></pre>
+<h2 id="4-轻量级cgroup和cgroup-pool"><a href="#4-轻量级cgroup和cgroup-pool" class="headerlink" title="4.轻量级cgroup和cgroup pool"></a>4.轻量级cgroup和cgroup pool</h2><pre><code>1）把所有的cgroup整合到一个目录中
+2）创建cgroup池
+</code></pre>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/05/28/RunD_A_Lightweight_Secure_Container_Runtime/" data-id="cli6y19o90001nov6bevd2h9i" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2023/05/28/Pocket_Ekastic_Emphemeral_Storage_for_Serverless_Analytics/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">May 2023</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/05/28/RunD_A_Lightweight_Secure_Container_Runtime/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2023/05/28/Pocket_Ekastic_Emphemeral_Storage_for_Serverless_Analytics/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2023/05/28/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2023 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
