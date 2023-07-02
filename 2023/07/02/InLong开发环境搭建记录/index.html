@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>InLong开发环境搭建记录 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="0. InLong介绍Apache InLong（应龙）是一站式的海量数据集成框架，提供自动、安全、可靠和高性能的数据传输能力，方便业务构建基于流式的数据分析、建模和应用。 InLong 项目原名 TubeMQ ，专注于高性能、低成本的消息队列服务。为了进一步释放 TubeMQ 周边的生态能力，我们将项目升级为 InLong，专注打造一站式海量数据集成框架。 Apache InLong 依托 10">
+<meta property="og:type" content="article">
+<meta property="og:title" content="InLong开发环境搭建记录">
+<meta property="og:url" content="http://example.com/2023/07/02/InLong%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E8%AE%B0%E5%BD%95/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="0. InLong介绍Apache InLong（应龙）是一站式的海量数据集成框架，提供自动、安全、可靠和高性能的数据传输能力，方便业务构建基于流式的数据分析、建模和应用。 InLong 项目原名 TubeMQ ，专注于高性能、低成本的消息队列服务。为了进一步释放 TubeMQ 周边的生态能力，我们将项目升级为 InLong，专注打造一站式海量数据集成框架。 Apache InLong 依托 10">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-07-02T14:57:07.000Z">
+<meta property="article:modified_time" content="2023-07-02T16:19:03.640Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-InLong开发环境搭建记录" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2023/07/02/InLong%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E8%AE%B0%E5%BD%95/" class="article-date">
+  <time class="dt-published" datetime="2023-07-02T14:57:07.000Z" itemprop="datePublished">2023-07-02</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      InLong开发环境搭建记录
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="0-InLong介绍"><a href="#0-InLong介绍" class="headerlink" title="0. InLong介绍"></a>0. InLong介绍</h1><p>Apache InLong（应龙）是一站式的海量数据集成框架，提供自动、安全、可靠和高性能的数据传输能力，方便业务构建基于流式的数据分析、建模和应用。 InLong 项目原名 TubeMQ ，专注于高性能、低成本的消息队列服务。为了进一步释放 TubeMQ 周边的生态能力，我们将项目升级为 InLong，专注打造一站式海量数据集成框架。 Apache InLong 依托 10 万亿级别的数据接入和处理能力，整合了数据采集、汇聚、存储、分拣数据处理全流程，拥有简单易用、灵活扩展、稳定可靠等特性。 该项目最初于 2019 年 11 月由腾讯大数据团队捐献到 Apache 孵化器，2022 年 6 月正式毕业成为 Apache 顶级项目。目前 InLong 正广泛应用于广告、支付、社交、游戏、人工智能等各个行业领域，为多领域客户提供高效化便捷化服务。</p>
+<span id="more"></span>
+
+<h1 id="1-服务器配置"><a href="#1-服务器配置" class="headerlink" title="1.服务器配置"></a>1.服务器配置</h1><h2 id="具体配置："><a href="#具体配置：" class="headerlink" title="具体配置："></a>具体配置：</h2><p>系统镜像：Ubuntu 20.04 LTS 64bit<br>CPU 4核、内存 8GB、系统盘 SSD云硬盘180G</p>
+<h2 id="踩坑记录："><a href="#踩坑记录：" class="headerlink" title="踩坑记录："></a>踩坑记录：</h2><p>最开始使用CPU 2核 内存 2GB的服务器进行docker部署，内存太小，系统总是卡死；然后我在自己电脑安装虚拟进行docker部署，但是我的电脑内存也不大，所以这个方法也以失败告终。<br>最终借用了同学的账号，用学生优惠买了三个月的服务器，刚一上手，体验感拉满！（但是噩梦也就此开始）</p>
+<h1 id="2-快速体验：二进制文件-docker部署"><a href="#2-快速体验：二进制文件-docker部署" class="headerlink" title="2.快速体验：二进制文件+docker部署"></a>2.快速体验：二进制文件+docker部署</h1><h2 id="部署步骤："><a href="#部署步骤：" class="headerlink" title="部署步骤："></a>部署步骤：</h2><p>1）虚拟机换源，参考[<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/421178143]">https://zhuanlan.zhihu.com/p/421178143]</a><br>2）安装docker 19.03.1+，参考[<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/143156163]">https://zhuanlan.zhihu.com/p/143156163]</a><br>3）安装docker compose 2.4+，参考[<a target="_blank" rel="noopener" href="https://developer.aliyun.com/article/763018]%EF%BC%8C%E6%88%91%E4%BD%BF%E7%94%A8%E7%9A%84%E6%98%AF%E6%96%B9%E6%B3%95%E4%BA%8C%EF%BC%8C%E5%8F%AA%E4%B8%8D%E8%BF%87%E6%98%AF%E8%87%AA%E5%B7%B1%E5%8E%BB%E5%AE%98%E7%BD%91%E4%B8%8B%E8%BD%BD%E7%9A%84docker-compose%E6%9C%80%E6%96%B0%E7%89%88">https://developer.aliyun.com/article/763018]，我使用的是方法二，只不过是自己去官网下载的docker-compose最新版</a><br>4）到inlong官网[<a target="_blank" rel="noopener" href="https://inlong.apache.org/zh-CN/download/]%E4%B8%8B%E8%BD%BD%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%96%87%E4%BB%B6%E3%80%81%E8%A7%A3%E7%A0%81%E3%80%81docker-compose%E9%83%A8%E7%BD%B2">https://inlong.apache.org/zh-CN/download/]下载二进制文件、解码、docker-compose部署</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd docker/docker-compose</span><br><span class="line">docker-compose up -d</span><br></pre></td></tr></table></figure>
+<p>5）使用xshell登录虚拟机，并对服务器的localhost:80进行建立隧道，实现本地浏览器对服务器本地80端口的访问，然后就可以通过图形界面直观体验一下inlong了，参考[<a target="_blank" rel="noopener" href="https://blog.csdn.net/hhhbada/article/details/105099128]">https://blog.csdn.net/hhhbada/article/details/105099128]</a></p>
+<h2 id="踩坑记录：-1"><a href="#踩坑记录：-1" class="headerlink" title="踩坑记录："></a>踩坑记录：</h2><p>1）inlong二进制文件比较大700多M，使用服务器下载比较慢，我在本地下载，然后使用scp命令传输到服务器，速度挺快的。<br>2）docker-compose部署过程，一定要记得对docker进行换源，否则大几个G的镜像，下载很慢。最坑的是，我在换阿里源后拉取镜像时，有些镜像在拉取时会卡死。最后解决方案是，如果出现卡死，就ctrl+C，已经完整拉取的镜像会保留，未完整拉取的则不保留。然后换用腾讯、百度等国内源，进行拉取，速度还是很快的。<br>3）docker配置国内源的策略和maven类似，及时配置了很多国内源，但是优先选用第一个，所以如果想简单粗暴地换源，那么就去改写配置文件</p>
+<p>踩坑踩到这里，两三天已经过去了。。。</p>
+<h1 id="3-开发入门：源码编译-docker部署"><a href="#3-开发入门：源码编译-docker部署" class="headerlink" title="3.开发入门：源码编译+docker部署"></a>3.开发入门：源码编译+docker部署</h1><p>上面只是简单体验了一下，要想对源代码进行修改，完成一些新手任务，需要对源码进行编译，然后再经过“快速体验”的步骤，就可以看到对代码修改的结果了。</p>
+<h2 id="源码编译步骤"><a href="#源码编译步骤" class="headerlink" title="源码编译步骤"></a>源码编译步骤</h2><p>1）从官网下载源码&#x2F;从github clone现行代码<br>2）对代码进行修改后，使用docker进行编译</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker pull maven:3.6-openjdk-8</span><br><span class="line">docker run -v `pwd`:/inlong  -w /inlong maven:3.6-openjdk-8 mvn clean install -DskipTests</span><br></pre></td></tr></table></figure>
+<p>3）编译成功后，会在inlong-distribution&#x2F;target下会找到tar.gz格式的安装包，解压安装目录<br>4）回到“2.快速体验”步骤进行部署，验证修改结果</p>
+<h2 id="踩坑记录"><a href="#踩坑记录" class="headerlink" title="踩坑记录"></a>踩坑记录</h2><p>1）由于使用docker镜像进行编译，该镜像非常精简，没有任何文本编辑器，因此想要对docker进行换源，可以在宿主机修改好换源的setting.xml，然后通过docker cp复制到容器内<br>2）即使换用了国内源，某些-source.jar文件仍然无法下载，我多次换用了不同的国内源（腾讯、ustc、163、阿里）等，甚至使用官方仓库，仍然无法下载；然后我到对应的源仓库去查看，发现根本没有相关的jar文件。<br>在长时间为未获取到这些jar文件后，编译过程会报一个[warning]，然后继续编译，最终也能编译成功。<br>但是存在的问题是，之后每次对代码进行修改，然后重新编译时，由于本地没有下载到相关的jar文件，还会进行长时间的等待，导致后续的每次一编译过程都很慢，平均每次要100min，太磨人了！<br>3）其实maven编译获取jar包的过程也非常缓慢，因为依赖太多，下载的相关依赖大概有6个G左右，因此我保存了含有依赖的镜像，后续（待我解决了-source.jar的问题）会上传到docker hub共享</p>
+<h1 id="4-未解决的问题：maven-source-jar无法下载导致编译速度过慢问题"><a href="#4-未解决的问题：maven-source-jar无法下载导致编译速度过慢问题" class="headerlink" title="4.未解决的问题：maven -source.jar无法下载导致编译速度过慢问题"></a>4.未解决的问题：maven -source.jar无法下载导致编译速度过慢问题</h1><p>代码的pom文件复杂，我对maven的一些高级使用并不熟悉，翻阅了大量博客也未能找到有效的解决方案，我后续的解决思路如下<br>1）尝试去理解该项目中maven的编译过程，看能否跳过冗长的等待下载步骤，只对代码的修改部分进行重新编译，而不对整体进行编译<br>2）如果上述方案行不通，则发邮箱向社区成员求教</p>
+<h1 id="5-感悟"><a href="#5-感悟" class="headerlink" title="5.感悟"></a>5.感悟</h1><p>虽然配个环境配了4、5天，还没完全配好，但是万事开头难，想象着如果最终能有幸参与到我人生中第一个开源项目中的话，还是非常激动的！加油！</p>
+<h1 id="5-参考记录"><a href="#5-参考记录" class="headerlink" title="5.参考记录"></a>5.参考记录</h1><p>docker配置国内镜像源：[<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_44797987/article/details/112681224#]">https://blog.csdn.net/qq_44797987/article/details/112681224#]</a><br>docker主机端口占用解决：[<a target="_blank" rel="noopener" href="https://blog.csdn.net/yes_is_ok/article/details/108471015]">https://blog.csdn.net/yes_is_ok/article/details/108471015]</a><br>docker修改容器后，保存为新镜像：[<a target="_blank" rel="noopener" href="https://www.cnblogs.com/lsgxeva/p/8746644.html]">https://www.cnblogs.com/lsgxeva/p/8746644.html]</a><br>docker安装hive：[<a target="_blank" rel="noopener" href="https://www.cnblogs.com/upupfeng/p/13452385.html]">https://www.cnblogs.com/upupfeng/p/13452385.html]</a><br>docker容器和宿主机建立文件夹映射：[<a target="_blank" rel="noopener" href="https://www.cnblogs.com/-saber/p/14667070.html]">https://www.cnblogs.com/-saber/p/14667070.html]</a><br>docker将本地镜像推送到docker hub：[<a target="_blank" rel="noopener" href="https://blog.csdn.net/qngfeng/article/details/108434322]">https://blog.csdn.net/qngfeng/article/details/108434322]</a><br>docker查看镜像堆叠历史：docker history name:tag<br>docker内没有文本编辑器，怎么换源：docker cp在外部写好文件，复制到docker里面</p>
+<p>xshell使用隧道访问服务器localhost：[<a target="_blank" rel="noopener" href="https://blog.csdn.net/hhhbada/article/details/105099128]">https://blog.csdn.net/hhhbada/article/details/105099128]</a></p>
+<p>maven ubuntu安装：[<a target="_blank" rel="noopener" href="https://blog.csdn.net/eif88/article/details/117416470#]">https://blog.csdn.net/eif88/article/details/117416470#]</a><br>maven快速下载（阿里镜像）：[<a target="_blank" rel="noopener" href="https://mirrors.aliyun.com/apache/maven/maven-3/3.9.3/binaries/?spm=a2c6h.25603864.0.0.4b327890qRAWfr%5D">https://mirrors.aliyun.com/apache/maven/maven-3/3.9.3/binaries/?spm=a2c6h.25603864.0.0.4b327890qRAWfr]</a><br>maven换源、本地仓库更改：[<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43909881/article/details/118277147]">https://blog.csdn.net/weixin_43909881/article/details/118277147]</a><br>jar与source.jar的区别：[<a target="_blank" rel="noopener" href="https://blog.csdn.net/csdn_yudong/article/details/48090535]">https://blog.csdn.net/csdn_yudong/article/details/48090535]</a><br>maven .lastUpdated下载失败问题：[<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/173422f1bd88]">https://www.jianshu.com/p/173422f1bd88]</a><br>mvn dependency:sources 下载jar包的源代码</p>
+<p>linux查看文件&#x2F;文件夹大小命令ls&#x2F;du：[<a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/2177646]">https://cloud.tencent.com/developer/article/2177646]</a><br>linux查找文件：find &#x2F; -type f -name xxx<br>linux vim跳转到最后一行：shift + g； 跳转到首行：gg</p>
+<p>ubuntu虚拟机换源：[<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/421178143]">https://zhuanlan.zhihu.com/p/421178143]</a><br>ubuntu20.04安装docker：[<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/143156163]">https://zhuanlan.zhihu.com/p/143156163]</a><br>ubuntu20.04安装docker-compose：[<a target="_blank" rel="noopener" href="https://developer.aliyun.com/article/763018]">https://developer.aliyun.com/article/763018]</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/07/02/InLong%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E8%AE%B0%E5%BD%95/" data-id="cljln4tl00001jov6c19bhe95" data-title="InLong开发环境搭建记录" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2023/05/28/Agile-Cold-Starts-for-Scalable-Serverless/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Agile-Cold-Starts-for-Scalable-Serverless</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/serverless/" rel="tag">serverless</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/serverless/" style="font-size: 10px;">serverless</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">July 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">May 2023</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/07/02/InLong%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E8%AE%B0%E5%BD%95/">InLong开发环境搭建记录</a>
+          </li>
+        
+          <li>
+            <a href="/2023/05/28/Agile-Cold-Starts-for-Scalable-Serverless/">Agile-Cold-Starts-for-Scalable-Serverless</a>
+          </li>
+        
+          <li>
+            <a href="/2023/05/28/RunD-A-Lightweight-Secure-Container-Runtime/">RunD_A_Lightweight_Secure_Container_Runtime</a>
+          </li>
+        
+          <li>
+            <a href="/2023/05/28/Pocket-Ekastic-Emphemeral-Storage-for-Serverless-Analytics/">Pocket_Ekastic_Emphemeral_Storage_for_Serverless_Analytics</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2023 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
