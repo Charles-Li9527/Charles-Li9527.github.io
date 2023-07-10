@@ -6,15 +6,15 @@
   
   <title>阿里云课程-linux入门-学习记录（一） | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="shell：命令解释器，就是个程序，根据命令名找到对应要执行的程序，结合参数执行 命令提示符prompt：通过修改PS1变量的值，可以修改提示符样式，eg：echo “PS1&#x3D;’[\e[1;35m][\u@\h \W]\$[\e[0m]‘“ &gt;&gt; .bashrc linux命令：分为内部命令（shell自带，常驻内存）和外部命令（到对应路径下加载可执行文件）；有一个hash">
+  <meta name="description" content="shell：命令解释器，就是个程序，根据命令名找到对应要执行的程序，结合参数执行  命令提示符prompt：通过修改PS1变量的值，可以修改提示符样式，eg：echo “PS1&#x3D;’[\e[1;35m][\u@\h \W]\$[\e[0m]‘“ &gt;&gt; .bashrc  linux命令：分为内部命令（shell自带，常驻内存）和外部命令（到对应路径下加载可执行文件）；有一个ha">
 <meta property="og:type" content="article">
 <meta property="og:title" content="阿里云课程-linux入门-学习记录（一）">
 <meta property="og:url" content="http://example.com/2023/07/04/%E9%98%BF%E9%87%8C%E4%BA%91%E8%AF%BE%E7%A8%8B-linux%E5%85%A5%E9%97%A8-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%EF%BC%88%E4%B8%80%EF%BC%89/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="shell：命令解释器，就是个程序，根据命令名找到对应要执行的程序，结合参数执行 命令提示符prompt：通过修改PS1变量的值，可以修改提示符样式，eg：echo “PS1&#x3D;’[\e[1;35m][\u@\h \W]\$[\e[0m]‘“ &gt;&gt; .bashrc linux命令：分为内部命令（shell自带，常驻内存）和外部命令（到对应路径下加载可执行文件）；有一个hash">
+<meta property="og:description" content="shell：命令解释器，就是个程序，根据命令名找到对应要执行的程序，结合参数执行  命令提示符prompt：通过修改PS1变量的值，可以修改提示符样式，eg：echo “PS1&#x3D;’[\e[1;35m][\u@\h \W]\$[\e[0m]‘“ &gt;&gt; .bashrc  linux命令：分为内部命令（shell自带，常驻内存）和外部命令（到对应路径下加载可执行文件）；有一个ha">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-07-04T03:05:05.000Z">
-<meta property="article:modified_time" content="2023-07-10T04:13:08.553Z">
+<meta property="article:modified_time" content="2023-07-10T04:24:38.250Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="linxu学习">
 <meta name="twitter:card" content="summary">
@@ -99,10 +99,15 @@
     <div class="e-content article-entry" itemprop="articleBody">
       
         <ol>
-<li>shell：命令解释器，就是个程序，根据命令名找到对应要执行的程序，结合参数执行</li>
-<li>命令提示符prompt：通过修改PS1变量的值，可以修改提示符样式，eg：echo “PS1&#x3D;’[\e[1;35m][\u@\h \W]\$[\e[0m]‘“ &gt;&gt; .bashrc</li>
-<li>linux命令：分为内部命令（shell自带，常驻内存）和外部命令（到对应路径下加载可执行文件）；有一个hash表来缓存命令路径，提高命令的调用速率；可以为命令设置别名：alias</li>
-<li>常见基础命令<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">一、硬件与系统相关</span><br><span class="line">查看cpu：lscpu</span><br><span class="line">查看内存：free -h</span><br><span class="line">查看硬盘：lsblk</span><br><span class="line">查看系统架构：arch</span><br><span class="line">查看内核版本：uname -r</span><br><span class="line">查看操作系统版本：lsb_release -a</span><br></pre></td></tr></table></figure></li>
+<li><p>shell：命令解释器，就是个程序，根据命令名找到对应要执行的程序，结合参数执行</p>
+</li>
+<li><p>命令提示符prompt：通过修改PS1变量的值，可以修改提示符样式，eg：echo “PS1&#x3D;’[\e[1;35m][\u@\h \W]\$[\e[0m]‘“ &gt;&gt; .bashrc</p>
+</li>
+<li><p>linux命令：分为内部命令（shell自带，常驻内存）和外部命令（到对应路径下加载可执行文件）；有一个hash表来缓存命令路径，提高命令的调用速率；可以为命令设置别名：alias</p>
+<span id="more"></span>
+</li>
+<li><p>常见基础命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">一、硬件与系统相关</span><br><span class="line">查看cpu：lscpu</span><br><span class="line">查看内存：free -h</span><br><span class="line">查看硬盘：lsblk</span><br><span class="line">查看系统架构：arch</span><br><span class="line">查看内核版本：uname -r</span><br><span class="line">查看操作系统版本：lsb_release -a</span><br></pre></td></tr></table></figure></li>
 </ol>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">二、其他</span><br><span class="line">关机和重启：poweroff/reboot</span><br><span class="line">echo输出有颜色字体：&quot;\033[字符背景颜色;字体颜色m字符串\033[0m&quot;</span><br><span class="line">$()与``：可以识别命令: echo `whoami`</span><br><span class="line">&#123;&#125;：可以实现打印重复字符串的简化形式：echo file&#123;1,3,5&#125;; echo file&#123;1..10..1&#125;</span><br><span class="line">查看命令历史记录：history、~/.bash_history</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
@@ -168,7 +173,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/linxu%E5%AD%A6%E4%B9%A0/" rel="tag">linxu学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/serverless/" rel="tag">serverless</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/InLong/" rel="tag">InLong</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linxu%E5%AD%A6%E4%B9%A0/" rel="tag">linxu学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/serverless/" rel="tag">serverless</a></li></ul>
     </div>
   </div>
 
@@ -178,7 +183,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/linxu%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">linxu学习</a> <a href="/tags/serverless/" style="font-size: 20px;">serverless</a>
+      <a href="/tags/InLong/" style="font-size: 10px;">InLong</a> <a href="/tags/linxu%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">linxu学习</a> <a href="/tags/serverless/" style="font-size: 20px;">serverless</a>
     </div>
   </div>
 
