@@ -147,55 +147,11 @@
     2.将公钥拷贝给服务端S ssh-copy-id 服务端S的ip（首次登陆需要密码）
     3.当C向S发送连接请求时（用户名+ip），C会用公钥进行加密，S进行解密，然后随机生成字符串给C，C将解密后的字符串发给S，二者完成互相确认身份，S允许C免密登录
 </code></pre>
-<h2 id="二、linux文件上传与下载：sftp和lrzsz"><a href="#二、linux文件上传与下载：sftp和lrzsz" class="headerlink" title="二、linux文件上传与下载：sftp和lrzsz"></a>二、linux文件上传与下载：sftp和lrzsz</h2><h2 id="三、挂载mount命令"><a href="#三、挂载mount命令" class="headerlink" title="三、挂载mount命令"></a>三、挂载mount命令</h2><pre><code>挂载是指将一个设备挂载到一个已存在的目录上，要访问设备中的文件，通过访问这个目录来实现
-命令格式：
-    mount [-t vfstype] [-o options] device dir
-    -t vfstype：指定文件系统的类型
-    -o options：描述设备的挂载方式  
-        loop：当成硬盘分区挂载
-        ro：采用只读方式挂载
-        rw：采用读写方式挂载
-    device：要挂载的设备
-    dir：要挂在的目录
-</code></pre>
-<h2 id="四、系统服务管理"><a href="#四、系统服务管理" class="headerlink" title="四、系统服务管理"></a>四、系统服务管理</h2><pre><code>service --status-all：查看系统所有的后台服务进程
-service 服务名 status：查看指定的后台服务进程的状态
-service 服务名 stop/start/restart：将指定的后台服务关闭/启动/重启
-
-chkconfig 服务名 on/off：让后台服务开机自启/不要自启
-</code></pre>
-<h2 id="五、网络管理"><a href="#五、网络管理" class="headerlink" title="五、网络管理"></a>五、网络管理</h2><pre><code>主机名配置：
-    hostname：查看主机名
-    hostname 新名字：修改主机名（重启后无效）
-    vim /etc/sysconfig/network：重启后永久生效
-ip地址配置：
-    vim /etc/sysconfig/netwok-scripts/ifcfg-eth0
-    service network restart：重启网络服务
-域名映射：
-    vim /etc/hosts：将主机名和ip地址映射写入
-网络端口监听
-    netstat -nlpt 获取进程名、进程号、用户ID
-</code></pre>
-<h2 id="六、定时命令crontab"><a href="#六、定时命令crontab" class="headerlink" title="六、定时命令crontab"></a>六、定时命令crontab</h2><pre><code>crontab：用于设置周期性被执行的命令，可以在固定时间间隔执行指定的系统指令或shell脚本
-service crond start/stop/restart/status
-
-crontab [-u user] file
-crontab [-u user] [-e | -l | -r]
-    -u user：用来设定某个用户的crontab服务
-    file：命令文件，表示将file作为crontab的任务列表文件并载入crontab
-    -e：编辑crontab文件内容
-    -l：显示crontab文件内容
-    -r：删除定时任务配置
-配置说明：
-    *   *   *   *   *   command
-    分  时  日  月  周  命令
-配置实例：
-    */1 * * * * date &gt;&gt; /root/date.txt
-    每分钟执行一次date命令
-    30 21 * * * /usr/local/etc/rc.d/httpd restart
-    每晚21:30重启apache
-</code></pre>
-
+        
+          <p class="article-more-link">
+            <a href="/2023/07/15/%E9%98%BF%E9%87%8C%E4%BA%91%E8%AF%BE%E7%A8%8B-linux%E5%85%A5%E9%97%A8-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%EF%BC%88%E4%B8%89%EF%BC%89/#more">Read More</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
