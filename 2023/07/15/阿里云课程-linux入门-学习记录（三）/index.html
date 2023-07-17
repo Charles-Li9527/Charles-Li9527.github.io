@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>阿里云课程-linux入门-学习记录（三） | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="1.linux服务器运维基本操作一、配置ssh免密登录原理：     1.首先在客户端C生成一对密钥 ssh-genkey -t rsa     2.将公钥拷贝给服务端S ssh-copy-id 服务端S的ip（首次登陆需要密码）     3.当C向S发送连接请求时（用户名+ip），C会用公钥进行加密，S进行解密，然后随机生成字符串给C，C将解密后的字符串发给S，二者完成互相确认身份，S允许C免密">
+<meta property="og:type" content="article">
+<meta property="og:title" content="阿里云课程-linux入门-学习记录（三）">
+<meta property="og:url" content="http://example.com/2023/07/15/%E9%98%BF%E9%87%8C%E4%BA%91%E8%AF%BE%E7%A8%8B-linux%E5%85%A5%E9%97%A8-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%EF%BC%88%E4%B8%89%EF%BC%89/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="1.linux服务器运维基本操作一、配置ssh免密登录原理：     1.首先在客户端C生成一对密钥 ssh-genkey -t rsa     2.将公钥拷贝给服务端S ssh-copy-id 服务端S的ip（首次登陆需要密码）     3.当C向S发送连接请求时（用户名+ip），C会用公钥进行加密，S进行解密，然后随机生成字符串给C，C将解密后的字符串发给S，二者完成互相确认身份，S允许C免密">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-07-15T10:41:48.000Z">
+<meta property="article:modified_time" content="2023-07-15T11:58:19.703Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="linux学习">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-阿里云课程-linux入门-学习记录（三）" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2023/07/15/%E9%98%BF%E9%87%8C%E4%BA%91%E8%AF%BE%E7%A8%8B-linux%E5%85%A5%E9%97%A8-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%EF%BC%88%E4%B8%89%EF%BC%89/" class="article-date">
+  <time class="dt-published" datetime="2023-07-15T10:41:48.000Z" itemprop="datePublished">2023-07-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      阿里云课程-linux入门-学习记录（三）
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="1-linux服务器运维基本操作"><a href="#1-linux服务器运维基本操作" class="headerlink" title="1.linux服务器运维基本操作"></a>1.linux服务器运维基本操作</h1><h2 id="一、配置ssh免密登录"><a href="#一、配置ssh免密登录" class="headerlink" title="一、配置ssh免密登录"></a>一、配置ssh免密登录</h2><pre><code>原理：
+    1.首先在客户端C生成一对密钥 ssh-genkey -t rsa
+    2.将公钥拷贝给服务端S ssh-copy-id 服务端S的ip（首次登陆需要密码）
+    3.当C向S发送连接请求时（用户名+ip），C会用公钥进行加密，S进行解密，然后随机生成字符串给C，C将解密后的字符串发给S，二者完成互相确认身份，S允许C免密登录
+</code></pre>
+<h2 id="二、linux文件上传与下载：sftp和lrzsz"><a href="#二、linux文件上传与下载：sftp和lrzsz" class="headerlink" title="二、linux文件上传与下载：sftp和lrzsz"></a>二、linux文件上传与下载：sftp和lrzsz</h2><h2 id="三、挂载mount命令"><a href="#三、挂载mount命令" class="headerlink" title="三、挂载mount命令"></a>三、挂载mount命令</h2><pre><code>挂载是指将一个设备挂载到一个已存在的目录上，要访问设备中的文件，通过访问这个目录来实现
+命令格式：
+    mount [-t vfstype] [-o options] device dir
+    -t vfstype：指定文件系统的类型
+    -o options：描述设备的挂载方式  
+        loop：当成硬盘分区挂载
+        ro：采用只读方式挂载
+        rw：采用读写方式挂载
+    device：要挂载的设备
+    dir：要挂在的目录
+</code></pre>
+<h2 id="四、系统服务管理"><a href="#四、系统服务管理" class="headerlink" title="四、系统服务管理"></a>四、系统服务管理</h2><pre><code>service --status-all：查看系统所有的后台服务进程
+service 服务名 status：查看指定的后台服务进程的状态
+service 服务名 stop/start/restart：将指定的后台服务关闭/启动/重启
+
+chkconfig 服务名 on/off：让后台服务开机自启/不要自启
+</code></pre>
+<h2 id="五、网络管理"><a href="#五、网络管理" class="headerlink" title="五、网络管理"></a>五、网络管理</h2><pre><code>主机名配置：
+    hostname：查看主机名
+    hostname 新名字：修改主机名（重启后无效）
+    vim /etc/sysconfig/network：重启后永久生效
+ip地址配置：
+    vim /etc/sysconfig/netwok-scripts/ifcfg-eth0
+    service network restart：重启网络服务
+域名映射：
+    vim /etc/hosts：将主机名和ip地址映射写入
+网络端口监听
+    netstat -nlpt 获取进程名、进程号、用户ID
+</code></pre>
+<h2 id="六、定时命令crontab"><a href="#六、定时命令crontab" class="headerlink" title="六、定时命令crontab"></a>六、定时命令crontab</h2><pre><code>crontab：用于设置周期性被执行的命令，可以在固定时间间隔执行指定的系统指令或shell脚本
+service crond start/stop/restart/status
+
+crontab [-u user] file
+crontab [-u user] [-e | -l | -r]
+    -u user：用来设定某个用户的crontab服务
+    file：命令文件，表示将file作为crontab的任务列表文件并载入crontab
+    -e：编辑crontab文件内容
+    -l：显示crontab文件内容
+    -r：删除定时任务配置
+配置说明：
+    *   *   *   *   *   command
+    分  时  日  月  周  命令
+配置实例：
+    */1 * * * * date &gt;&gt; /root/date.txt
+    每分钟执行一次date命令
+    30 21 * * * /usr/local/etc/rc.d/httpd restart
+    每晚21:30重启apache
+</code></pre>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/07/15/%E9%98%BF%E9%87%8C%E4%BA%91%E8%AF%BE%E7%A8%8B-linux%E5%85%A5%E9%97%A8-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%EF%BC%88%E4%B8%89%EF%BC%89/" data-id="clk6lo82p0004jsv6fhhzhzd9" data-title="阿里云课程-linux入门-学习记录（三）" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux%E5%AD%A6%E4%B9%A0/" rel="tag">linux学习</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2023/07/16/InLong-Learning/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          InLong Learning
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2023/07/10/%E9%98%BF%E9%87%8C%E4%BA%91%E8%AF%BE%E7%A8%8B-linux%E5%85%A5%E9%97%A8-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%EF%BC%88%E4%BA%8C%EF%BC%89/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">阿里云课程-linux入门-学习记录（二）</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/InLong/" rel="tag">InLong</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux%E5%AD%A6%E4%B9%A0/" rel="tag">linux学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linxu%E5%AD%A6%E4%B9%A0/" rel="tag">linxu学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/serverless/" rel="tag">serverless</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/InLong/" style="font-size: 15px;">InLong</a> <a href="/tags/linux%E5%AD%A6%E4%B9%A0/" style="font-size: 15px;">linux学习</a> <a href="/tags/linxu%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">linxu学习</a> <a href="/tags/serverless/" style="font-size: 20px;">serverless</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">July 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">May 2023</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/07/16/InLong-Learning/">InLong Learning</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/15/%E9%98%BF%E9%87%8C%E4%BA%91%E8%AF%BE%E7%A8%8B-linux%E5%85%A5%E9%97%A8-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%EF%BC%88%E4%B8%89%EF%BC%89/">阿里云课程-linux入门-学习记录（三）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/10/%E9%98%BF%E9%87%8C%E4%BA%91%E8%AF%BE%E7%A8%8B-linux%E5%85%A5%E9%97%A8-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%EF%BC%88%E4%BA%8C%EF%BC%89/">阿里云课程-linux入门-学习记录（二）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/10/%E9%98%BF%E9%87%8C%E4%BA%91%E8%AF%BE%E7%A8%8B-linux%E5%85%A5%E9%97%A8-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%EF%BC%88%E4%B8%80%EF%BC%89/">阿里云课程-linux入门-学习记录（一）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/02/InLong%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E8%AE%B0%E5%BD%95/">InLong开发环境搭建记录</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2023 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

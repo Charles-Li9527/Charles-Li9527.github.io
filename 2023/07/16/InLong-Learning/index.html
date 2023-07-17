@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>InLong Learning | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="1.InLong中的FormatInLong中的消息队列MQ作为传输通道，实现DataProxy与Sort的解耦。数据从DataProxy传到MQ需要序列化，Sort从MQ读数据需要反序列化 目前，InLongs提供了csv、KeyValue、json、InLongMsg封装的格式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="InLong Learning">
+<meta property="og:url" content="http://example.com/2023/07/16/InLong-Learning/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="1.InLong中的FormatInLong中的消息队列MQ作为传输通道，实现DataProxy与Sort的解耦。数据从DataProxy传到MQ需要序列化，Sort从MQ读数据需要反序列化 目前，InLongs提供了csv、KeyValue、json、InLongMsg封装的格式">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-07-16T02:51:08.000Z">
+<meta property="article:modified_time" content="2023-07-17T08:25:25.758Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="InLong">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-InLong-Learning" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2023/07/16/InLong-Learning/" class="article-date">
+  <time class="dt-published" datetime="2023-07-16T02:51:08.000Z" itemprop="datePublished">2023-07-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      InLong Learning
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="1-InLong中的Format"><a href="#1-InLong中的Format" class="headerlink" title="1.InLong中的Format"></a>1.InLong中的Format</h1><pre><code>InLong中的消息队列MQ作为传输通道，实现DataProxy与Sort的解耦。数据从DataProxy传到MQ需要序列化，Sort从MQ读数据需要反序列化
+目前，InLongs提供了csv、KeyValue、json、InLongMsg封装的格式
+</code></pre>
+<span id="more"></span>
+
+<h1 id="2-InLong-Agent"><a href="#2-InLong-Agent" class="headerlink" title="2.InLong Agent"></a>2.InLong Agent</h1><pre><code>在标准架构中，通过InLong Agent来采集各种类型的数据源。支持以插件的方式扩展新的采集类型。
+InLong Agent是一个数据采集框架，采用Job + Task架构模型，将数据源读取和写入抽象为Reader/Sink插件。   Job描述一个从一个源头到目的端的同步作业；Task是把Job拆分得到的最小执行单元。    一个Task包括Reader、Sink、Channel组件，分别用于数据采集、数据写入、数据通道
+
+InLong Agent是一个支持多种数据源类型的收集工具，致力于实现包括File。Sql、Binlog等多种异构数据源之间稳定高效的数据采集功能。InLong Agent将多种数据源抽象成统一的source概念，并抽象出sink、来对数据进行写入。
+</code></pre>
+<h1 id="3-InLong-Sort"><a href="#3-InLong-Sort" class="headerlink" title="3.InLong Sort"></a>3.InLong Sort</h1><pre><code>InLong Sort是一个基于Apache Flink SQL的ETL服务，既支持和Manager一起配合使用，通过Manager进行系统元数据的管理，也可以在Flink环境下独立运行。支持在Inlong Sort中扩展一个新的source（在InLong中抽象为Extract Node）或一个新的sink（在InLong中抽象为Load Node）
+</code></pre>
+<h1 id="4-InLong-DashBoard"><a href="#4-InLong-DashBoard" class="headerlink" title="4.InLong DashBoard"></a>4.InLong DashBoard</h1><pre><code>InLong DashBoard作为前端控制台，采用React框架构建
+</code></pre>
+<h1 id="5-InLong-Manager"><a href="#5-InLong-Manager" class="headerlink" title="5.InLong Manager"></a>5.InLong Manager</h1><pre><code>InLong的设计初衷是为了在不同数据源之间创建数据流，InLong的每种数据结点，支持通过Manager提供统一的管理
+</code></pre>
+<h1 id="6-InLong-DataProxy"><a href="#6-InLong-DataProxy" class="headerlink" title="6.InLong DataProxy"></a>6.InLong DataProxy</h1><pre><code>DataProxy主要有连接收敛、路由、数据压缩和协议转换等作用。实现了统一抽象MQ Sink模型，支持添加不同的MQ流向。DataProxy是基于Apache Flume的数据接收和流转框架，采用Source + Channel + Sink架构模型。
+</code></pre>
+<h1 id="7-Apache-InLong-TubeMQ模块的架构"><a href="#7-Apache-InLong-TubeMQ模块的架构" class="headerlink" title="7.Apache InLong TubeMQ模块的架构"></a>7.Apache InLong TubeMQ模块的架构</h1><pre><code>portable：
+    负责对外交互和运维操作的portal部分，包括API和web两块
+master：
+    负责集群控制的control部分，有一个或多个master节点组成，主master节点负责管理整个集群的状态、资源调度、权限检查、元数据查询等
+broker：
+    负责实际数据存储的store部分，由相互独立的broker节点组成，每个broker节点对本节点内的topic进行管理，包括topic的增删改查，topic内的消息存储、消费、老化、分区扩容、数据消费的offset记录等；以及集群对外能力，包括topic数目、吞吐量、容量等，通过水平扩展broker节点完成
+client：
+    负责数据生产和消费的client部分，消费端支持Push、Pull两种数据拉取模式，数据消费行为支持顺序和过滤消费两种；对于Pull消费模式，支持业务通过客户端重置精确offset以支持业务exactly-once消费；同时，消费端新推出跨集群免重启的Consumer客户端
+zookeeper：
+    负责offset存储的zookeeper部分，仅做offset的持久化存储
+
+模块特点：
+    引入协调节点：
+        采用自管理的元数据仲裁机制，master节点通过内嵌数据库BDB完成集群内数据的存储、更新、运行和配置管理等
+    服务器侧消费负载均衡：
+    系统行级锁操作：
+    offset管理调整：
+        offset由各个broker独自管理，ZK只作数据持久化存储作用
+    消息读取机制的改进：
+        采用消息随机读取模式，为了降低消息时延，又增加了内存缓存读写
+    消费者行为管控：
+        支持通过策略实时动态地控制系统接入的消费者行为，包括负载高时对特定业务的限流、暂停消费等
+    服务分级管控、系统安全管控、资源利用率提升改进、客户端改进
+</code></pre>
+<h1 id="8-InLong-Audit"><a href="#8-InLong-Audit" class="headerlink" title="8.InLong Audit"></a>8.InLong Audit</h1><pre><code>InLong Audit是独立于InLong的一个子系统，对Agent、DataProxy、Sort模块的出、入流量进行实时审计对账。对账粒度有分钟、小时、天三种粒度。
+</code></pre>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/07/16/InLong-Learning/" data-id="clk6lo81u0000jsv66bqggzur" data-title="InLong Learning" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/InLong/" rel="tag">InLong</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2023/07/15/%E9%98%BF%E9%87%8C%E4%BA%91%E8%AF%BE%E7%A8%8B-linux%E5%85%A5%E9%97%A8-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%EF%BC%88%E4%B8%89%EF%BC%89/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">阿里云课程-linux入门-学习记录（三）</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/InLong/" rel="tag">InLong</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux%E5%AD%A6%E4%B9%A0/" rel="tag">linux学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linxu%E5%AD%A6%E4%B9%A0/" rel="tag">linxu学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/serverless/" rel="tag">serverless</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/InLong/" style="font-size: 15px;">InLong</a> <a href="/tags/linux%E5%AD%A6%E4%B9%A0/" style="font-size: 15px;">linux学习</a> <a href="/tags/linxu%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">linxu学习</a> <a href="/tags/serverless/" style="font-size: 20px;">serverless</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">July 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">May 2023</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/07/16/InLong-Learning/">InLong Learning</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/15/%E9%98%BF%E9%87%8C%E4%BA%91%E8%AF%BE%E7%A8%8B-linux%E5%85%A5%E9%97%A8-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%EF%BC%88%E4%B8%89%EF%BC%89/">阿里云课程-linux入门-学习记录（三）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/10/%E9%98%BF%E9%87%8C%E4%BA%91%E8%AF%BE%E7%A8%8B-linux%E5%85%A5%E9%97%A8-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%EF%BC%88%E4%BA%8C%EF%BC%89/">阿里云课程-linux入门-学习记录（二）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/10/%E9%98%BF%E9%87%8C%E4%BA%91%E8%AF%BE%E7%A8%8B-linux%E5%85%A5%E9%97%A8-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%EF%BC%88%E4%B8%80%EF%BC%89/">阿里云课程-linux入门-学习记录（一）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/02/InLong%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E8%AE%B0%E5%BD%95/">InLong开发环境搭建记录</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2023 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

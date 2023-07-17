@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>阿里云课程-linux入门-学习记录（二） | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="1. shell脚本编程一、基本用法变量：     命名：区分大小写     变量赋值：         字符串：var &#x3D; &#39;apple&#39;         变量引用：var &#x3D; &quot;$apple&quot;，双引号是强引用，得到变量值，单引号是弱引用         命令引用：var &#x3D; $(COMMAND) 或 &#96;COMMAND&#96;     环境变量：声明：export">
+<meta property="og:type" content="article">
+<meta property="og:title" content="阿里云课程-linux入门-学习记录（二）">
+<meta property="og:url" content="http://example.com/2023/07/10/%E9%98%BF%E9%87%8C%E4%BA%91%E8%AF%BE%E7%A8%8B-linux%E5%85%A5%E9%97%A8-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%EF%BC%88%E4%BA%8C%EF%BC%89/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="1. shell脚本编程一、基本用法变量：     命名：区分大小写     变量赋值：         字符串：var &#x3D; &#39;apple&#39;         变量引用：var &#x3D; &quot;$apple&quot;，双引号是强引用，得到变量值，单引号是弱引用         命令引用：var &#x3D; $(COMMAND) 或 &#96;COMMAND&#96;     环境变量：声明：export">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-07-10T05:22:16.000Z">
+<meta property="article:modified_time" content="2023-07-17T08:25:19.791Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="linux学习">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-阿里云课程-linux入门-学习记录（二）" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2023/07/10/%E9%98%BF%E9%87%8C%E4%BA%91%E8%AF%BE%E7%A8%8B-linux%E5%85%A5%E9%97%A8-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%EF%BC%88%E4%BA%8C%EF%BC%89/" class="article-date">
+  <time class="dt-published" datetime="2023-07-10T05:22:16.000Z" itemprop="datePublished">2023-07-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      阿里云课程-linux入门-学习记录（二）
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="1-shell脚本编程"><a href="#1-shell脚本编程" class="headerlink" title="1. shell脚本编程"></a>1. shell脚本编程</h1><h2 id="一、基本用法"><a href="#一、基本用法" class="headerlink" title="一、基本用法"></a>一、基本用法</h2><pre><code>变量：
+    命名：区分大小写
+    变量赋值：
+        字符串：var = &#39;apple&#39;
+        变量引用：var = &quot;$apple&quot;，双引号是强引用，得到变量值，单引号是弱引用
+        命令引用：var = $(COMMAND) 或 `COMMAND`
+    环境变量：声明：export name=VALUE
+    只读变量：声明：readonly name=VALUE
+    位置变量：
+        $1，$2：传给脚本的第1/2个参数
+        $0：命令本身，包括路径
+        $*：传给脚本的所有参数，合为一个字符串
+        $@：传给脚本的所有参数，每个参数为独立字符串
+        $#：传给脚本的参数个数
+    退出状态码变量：
+        $?：进程执行后，使用该变量保存进程执行状态，0为成功，其他为异常
+</code></pre>
+<span id="more"></span>
+<pre><code>格式化输出printf：
+    printf &quot;指定的格式&quot; &quot;文本1&quot; &quot;文本n&quot;
+
+算术运算：
+    let var=算术表达式
+    ((var=算术表达式))
+    var=$((算术表达式))
+
+    $RANDOM：随机数生成器
+</code></pre>
+<h3 id="脚本运行情况测试：bash-x-脚本名称"><a href="#脚本运行情况测试：bash-x-脚本名称" class="headerlink" title="脚本运行情况测试：bash -x 脚本名称"></a>脚本运行情况测试：bash -x 脚本名称</h3><pre><code>条件测试指令：判断某需求是否满足，若真$?返回0，若假$?返回1
+    命令格式：
+        test EXPRESSION
+        [ EXPRESSION ]
+    变量测试：
+        [ -v NAME ] 或 test -v NAME：判断变量是否定义
+    数值测试：
+        -eq -ne -gt -ge -lt -le
+        eg: [ $x -ge $y ]
+    字符串测试：
+        pass
+    文件测试：
+        pass
+
+关于()和&#123;&#125;：
+    同：都可以将多个命令组合在一起，批量执行(CMD1;CMD2)  &#123;CMD1;CMD2&#125;
+    异：()开启子shell执行；&#123;&#125;在当前shell运行，会影响当前shell环境
+
+组合测试条件：
+    方式一：
+        [ EXP1 -a/-o EXP2] 与/或
+        [ !EXP ] 取反  
+    方式二：
+        EXP1 &amp;&amp;/|| EXP2
+        !EXP
+    
+使用read命令来接受输入：
+    read -p &quot;please input your name:&quot; NAME
+</code></pre>
+<h2 id="二、bash-shell的配置文件"><a href="#二、bash-shell的配置文件" class="headerlink" title="二、bash shell的配置文件"></a>二、bash shell的配置文件</h2><pre><code>    全局配置与个人配置：
+        全局配置：/etc/profile/     /etc/profile.d/*.sh     /etc/bashrc
+        个人配置：~/.bashrc     ~/.bash_profile
+</code></pre>
+<h2 id="三、流程控制"><a href="#三、流程控制" class="headerlink" title="三、流程控制"></a>三、流程控制</h2><pre><code>    if语句：
+    <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">单分支：</span><br><span class="line">    if 判断条件；then</span><br><span class="line">        ...</span><br><span class="line">    fi</span><br><span class="line"></span><br><span class="line">双分支：</span><br><span class="line">    if 判断条件；then</span><br><span class="line">        ...</span><br><span class="line">    else</span><br><span class="line">        ...</span><br><span class="line">    fi</span><br><span class="line"></span><br><span class="line">多分支：</span><br><span class="line">    if 判断条件1；then</span><br><span class="line">        ...</span><br><span class="line">    elif 判断条件2；then</span><br><span class="line">        ...</span><br><span class="line">    elif 判断条件3；then</span><br><span class="line">        ...</span><br><span class="line">    else</span><br><span class="line">        ...</span><br><span class="line">    fi</span><br></pre></td></tr></table></figure>
+
+    case语句
+    <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">case 变量引用 in</span><br><span class="line">PATTERN1)</span><br><span class="line">    ...</span><br><span class="line">    ;;</span><br><span class="line">PATTERN2)</span><br><span class="line">    ...</span><br><span class="line">    ;;</span><br><span class="line">...</span><br><span class="line">*)</span><br><span class="line">    默认分支</span><br><span class="line">    ;;</span><br><span class="line">esac</span><br></pre></td></tr></table></figure>
+
+    for语句
+    <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">for 变量名 in 列表；do</span><br><span class="line">    循环体</span><br><span class="line">done</span><br><span class="line"></span><br><span class="line">for ((控制变量初始化；条件判断表达式；控制变量的修正表达式))</span><br><span class="line">do</span><br><span class="line">    循环体</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+
+    while语句
+    <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">while CONDITION；do</span><br><span class="line">    循环体</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+
+    支持continue和break
+</code></pre>
+<h2 id="四、函数"><a href="#四、函数" class="headerlink" title="四、函数"></a>四、函数</h2><pre><code>函数定义
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">func_name() &#123;</span><br><span class="line">    函数体</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function func_name &#123;</span><br><span class="line">    函数体</span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line">function func_name() &#123;</span><br><span class="line">    函数体</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+查看函数
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">declare -F/-f [func_name] 查看当前已定义的函数名/函数定义</span><br></pre></td></tr></table></figure>
+
+删除函数
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unset func_name</span><br></pre></td></tr></table></figure>
+
+函数调用
+    1）可在交互式环境下定义和使用
+    2）可在脚本中定义和使用
+    3）使用函数文件（也是#!/bin/bash
+        将常用的函数，放入函数文件，只存放函数定义
+        在shell中调用函数文件  . 函数文件  或 source 函数文件
+        然后就可以declare -f查看到定义的函数
+        直接输入函数名称就可以调用
+        如果要改动某个函数，重新source就行
+
+local var=NAME：在函数中定义本地变量（作用范围为函数内）
+</code></pre>
+<h2 id="五、数组"><a href="#五、数组" class="headerlink" title="五、数组"></a>五、数组</h2><pre><code>声明数组
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">普通数组：declare -a ARRAY_NAME，可以不声明，直接使用</span><br><span class="line">关联数组: declare -A ARRAY_NAME，必须先声明，再使用</span><br></pre></td></tr></table></figure>
+
+数组赋值
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1）ARRAY_NAME[INDEX]=VALUE</span><br><span class="line">2）ARRAY_NAME=([0]=VALUE1 [1]=VALUE2...)</span><br><span class="line">3）ARRAY_NAME=(VAL1 VAL2 ...)</span><br></pre></td></tr></table></figure>
+
+delcare -a ：显示所有数组
+
+数组引用
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$&#123;ARRAY_NAME[INDEX]&#125;</span><br><span class="line">$&#123;ARRAY_NAME[*/@]&#125;：引用数组所有元素</span><br><span class="line">$&#123;#ARRAY_NAME[*/@]&#125;：获取数组长度</span><br></pre></td></tr></table></figure>
+
+删除数组
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">unset ARRAY_NAME[INDEX]：删除某个元素</span><br><span class="line">unset ARRAY_NAME：删除整个数组</span><br></pre></td></tr></table></figure>
+
+数组数据处理
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">数组切片：$&#123;ARRAY[*]:offset:number&#125;</span><br><span class="line">向数组追加元素：ARRAY[$&#123;#ARRAY[*/@]&#125;]=VALUE</span><br></pre></td></tr></table></figure>
+
+关联数组：类似于字典，键值对 
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">declare -A ARRAY_NAME</span><br><span class="line">ARRAY_NAME=([idx_name1]=&#x27;val1&#x27; [idx_name2]=&#x27;val2&#x27; ...)</span><br></pre></td></tr></table></figure>
+</code></pre>
+<h2 id="六、字符串处理"><a href="#六、字符串处理" class="headerlink" title="六、字符串处理"></a>六、字符串处理</h2><pre><code>字符串切片
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$&#123;#var&#125;：返回字符串变量长度</span><br><span class="line">$&#123;var:offset&#125;：返回第offset之后的字符串</span><br><span class="line">$&#123;var:offset:number&#125;：返回第offset后长度为number的子串</span><br><span class="line">$&#123;var: -length&#125;：返回最右边的length个字符</span><br></pre></td></tr></table></figure>
+
+基于模式取子串
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$&#123;var#*word&#125;：查找字符串var中的第一个word，删左留右</span><br><span class="line">$&#123;var##*word&#125;：以最后一个word为界，删左留右</span><br><span class="line">$&#123;var%word*&#125;：从右向左</span><br><span class="line">$&#123;var%%word*&#125;：从右向左</span><br></pre></td></tr></table></figure>
+
+查找替换
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$&#123;var/pattern/substr&#125;：查找第一个被pattern匹配的字符串，用substr替换</span><br><span class="line">$&#123;var//pattern/substr&#125;：查找所有被pattern匹配的字符串，用substr替换</span><br></pre></td></tr></table></figure>
+
+查找并删除
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$&#123;var/pattern&#125;：删除第一次被pattern匹配的字符串</span><br><span class="line">$&#123;var//pattern&#125;：删除所有被pattern匹配的字符串</span><br></pre></td></tr></table></figure>
+</code></pre>
+<h2 id="七、高级变量"><a href="#七、高级变量" class="headerlink" title="七、高级变量"></a>七、高级变量</h2><pre><code>shell变量一般是无类型的，但是declare和typeset可以为变量指定类型
+</code></pre>
+<h1 id="2-文件查找"><a href="#2-文件查找" class="headerlink" title="2.文件查找"></a>2.文件查找</h1><h2 id="一、文件查找"><a href="#一、文件查找" class="headerlink" title="一、文件查找"></a>一、文件查找</h2><pre><code>locate：非实时查找，通过数据库
+    locate [OPTION] [PATTERN]
+    OPTION:
+        -i：不区分大小写
+        -n：只列举前n个匹配项目
+        -r：使用基本正则表达式
+
+find：实时查找，通过遍历指定路径，完成文件查找
+    find [OPTION] [查找路径] [查找条件] [处理动作]
+
+    查找路径：
+        默认当前目录
+    查找条件：
+        指定搜索目录层级：
+            -maxdepth level：最大深度
+            -mindepth level：最小深度
+        先处理目录内文件，再处理目录本身：
+            -depth
+    OPTION：
+        -name：按文件名查找
+        -iname：忽略大小写，按文件名查找
+        -regex &quot;PATTERN&quot;：以PATTERN匹配文件路径，而非文件名称
+        -user/group/uid/gid：根据属主、属组查找
+        -type TYPE：根据文件类型查找
+        组合条件：-a与、-o或、-not非
+    处理动作：
+        -print：默认，显示至屏幕
+        -exec COMMAND &#123;&#125; \; ：对查找到的每个文件执行COMMAND
+
+参数替换xargs：
+    管道的作用是将|左侧的标准输出作为右侧的标准输入，但是好多命令没有标准输入，要想利用左侧的标准输出，作为右侧命令的参数，就要靠|xargs
+    xargs：用于产生某个命令的参数，可以读入stdin的数据，以空格或回车为换行符，将数据划分为参数
+        COMMAND1 | xagrs COMMAND2
+        seq 10 | xargs 相当于 seq 10 | xargs echo
+        seq 10 | xargs -n2 一行输出两个参数
+</code></pre>
+<h1 id="3-软件管理"><a href="#3-软件管理" class="headerlink" title="3.软件管理"></a>3.软件管理</h1><h2 id="一、软件运行和编译"><a href="#一、软件运行和编译" class="headerlink" title="一、软件运行和编译"></a>一、软件运行和编译</h2><pre><code>ABI：Application Binary Interface，windows是PE格式，linux是ELF格式
+API：Application Programming Interface，可以在不同OS为程序提供相同接口
+POSIX：为应用程序提供了接口标准，linux和windows都要实现基本的posix标准，程序在源代码级别可移植
+库文件：
+    ldd /path/to/binary_file：可以查看二进制程序所以依赖的库文件
+</code></pre>
+<h2 id="二、软件包和包管理器"><a href="#二、软件包和包管理器" class="headerlink" title="二、软件包和包管理器"></a>二、软件包和包管理器</h2><pre><code>软件包：
+    开源软件最初只提供了打包的源码文件，用户要自己编译，比较麻烦。软件包中的文件可分为：二进制文件、库文件、配置文件、帮助文件
+
+包管理器：
+    将编译好的应用程序的各组成文件打包成一个或几个程序包文件，利用包管理器可以方便快捷地实现程序包的安装、卸载、查询、升级和校验等管理操作
+    主流的包管理器：
+        redhat：rpm文件，rpm包管理器
+        debian：deb
+    包命名一般含有arch信息：比如x86、x86_64、powerpc、平台无关noarch
+    分类和拆包：
+        软件包为了管理和使用的便利，会将一个大的软件分类，放在不同子包中
+        包的分类：
+            application主包、application-devel开发子包、application-utils其他子包、application-libs其他子包
+    包的依赖：
+        软件包之间可能存在依赖关系，甚至是循环依赖。rpm无法解决依赖问题，常用包管理工具yum(基于rpm)、dnf（基于rpm）、apt（基于deb）解决依赖问题
+    包管理器组成：
+        包内文件、元数据、数据库（用于查询等）
+</code></pre>
+<h2 id="三、rpm包管理器"><a href="#三、rpm包管理器" class="headerlink" title="三、rpm包管理器"></a>三、rpm包管理器</h2><pre><code>CentOS上使用rpm命令管理程序包
+安装：
+    rpm -i [-options] PACKAGE_FILE...
+升级降级：
+    rpm -U/-F [-options] PACKAGE_FILE...
+包查询：
+    rpm -q [select-options] [query-options]
+</code></pre>
+<h2 id="四、yum和dnf"><a href="#四、yum和dnf" class="headerlink" title="四、yum和dnf"></a>四、yum和dnf</h2><pre><code>CentOS使用yum和dnf解决rpm包依赖问题
+yum/dnf工作原理：
+    基于C/S模式，服务器存放rpm包和相关元数据库；客户端访问服务器进行安装或查询
+
+yum客户端配置
+    /etc/yum.conf：为所有仓库提供公共配置
+    /etc/yum.repos.d/*.repo：为每个仓库配置独立配置文件
+
+yum命令
+    yum repolist：显示仓库列表
+    yum list：显示程序包
+    yum install：安装程序包
+    yum remove：卸载程序包
+    yum clean：清除仓库缓存
+    yum history：查看yum命令历史
+dnf介绍
+    就是升级版的yum，用法与yum相同
+</code></pre>
+<h2 id="五、ubuntu软件管理"><a href="#五、ubuntu软件管理" class="headerlink" title="五、ubuntu软件管理"></a>五、ubuntu软件管理</h2><pre><code>Debian软件包通常为预编译的二进制格式的扩展名&quot;.deb&quot;，类似rpm文件。包文件包括特定功能或软件所必须的文件、元数据和指令
+dpkg：
+    类似rpm，是基于Debian的系统的包管理器。可以安装、删除和构建软件包，但无法自动下载和安装软件包或其依赖项
+apt：
+    基于C/S架构，类似于yum
+
+apt工作原理：
+    apt将所有DEB包信息记录在DEB索引清单中，一旦APT服务器内的DEB有变动，会对索引清单进行更新。客户端在安装或升级时先查询DEB索引清单，获得具有依赖关系的软件包，一同下载到客户端，进行安装；当客户端需要安装、升级或删除某个软件包时，客户端先获得DEB索引清单，然后与客户端本机的DEB数据库对比，就可以知道哪些DEB已安装、未安装或者可以升级
+dpkg包管理器：
+    dpgk -i package.deb：安装包
+    一般不使用dpkg卸载软件包，因为删除包时，其他依赖他的包不会卸载，并且可能无法再正常运行
+apt：
+    Debian使用apt工具来管理包系统。早期，常用的包管理命令被分散在apt-get/apt-cache/apt-config中；但ubuntu16.04引入了apt命令，apt是以上三个命令常用指令的集合，但不能完全涵盖
+    apt install：安装软件包
+    apt remove：移除软件包
+    apt purge：移除软件包及其配置文件
+    apt update：刷新数据库索引
+    apt upgrade：升级所有可升级的软件包
+</code></pre>
+<h1 id="4-磁盘存储和文件系统"><a href="#4-磁盘存储和文件系统" class="headerlink" title="4.磁盘存储和文件系统"></a>4.磁盘存储和文件系统</h1><h2 id="一、磁盘结构"><a href="#一、磁盘结构" class="headerlink" title="一、磁盘结构"></a>一、磁盘结构</h2><pre><code>设备文件：关联至一个设备驱动程序，进而能够跟与之对应的硬件设备进行通信
+设备号码：
+    主设备号：标识设备类型
+    次设备号：标识同一类型下的不同设备
+设备类型：
+    块设备：block
+    字符设备：char
+CSH：
+    head：磁头，磁头数=盘面数
+    track：磁道，磁道数=柱面数
+    sector：扇区，512byte
+    cylinder：柱面
+磁盘寻址方式
+    CSH：寻址空间在8GB以内
+    LBA：寻址空间大于8G，只能用LBA方式
+</code></pre>
+<h2 id="二、管理存储"><a href="#二、管理存储" class="headerlink" title="二、管理存储"></a>二、管理存储</h2><pre><code>使用磁盘空间的过程：
+    1.设备分区
+    2.创建文件系统
+    3.挂载新的文件系统
+磁盘分区：
+    为什么分区：
+        优化IO性能、安装多个OS、采用不同文件系统
+    分区方式：
+        两种：MBR、GPT
+        MBR：使用32位表示扇区数目，一个扇区512byte，所以MBR分区不超过2T
+            MBR分区中，一块硬盘最多有4个主分区，也可以3个主分区+1扩展分区（扩展分区可以划分为N个逻辑分区）
+            主和扩展分区对应1-4，/dev/sda3，逻辑分区从5开始，/dev/sda5
+        GPT：支持128个分区，使用64位
+    BOIS和UEFI：
+        BIOS是固化在电脑主板上的程序，主要用于开机系统自检和引导操作系统。目前新式电脑基本用UEFI启动
+    管理分区：
+        lsblk：列出块设备
+        fdisk -l：查看分区
+文件系统：
+    文件系统类型：
+        Linux常用文件系统：ext2/ext3/ext4/xfs/swap/
+        Windows常用文件系统：FAT32、NTFS、exFAT
+    文件系统的组成部分：
+        内核中的模块：ext4、xfs、vfat
+        linux的虚拟文件系统：VFS
+        用户空间地管理工具：mkf.ext4、mkfs.xfs、mkfs.vfat
+    文件系统管理：
+        mkfs：创建文件系统
+        查看管理和分区信息：
+            blkid：查看块设备属性信息
+</code></pre>
+<h2 id="三、挂载"><a href="#三、挂载" class="headerlink" title="三、挂载"></a>三、挂载</h2><pre><code>挂载：
+    将额外文件系统与根文件系统某现存的目录建立起关联关系，进而使得此目录作为其他文件访问入口的行为，挂载点下原有文件在挂在完成后会被临时隐藏，因此，挂载点目录一般为空，进程正在使用中的设备无法被卸载
+挂载规则：
+    一个挂载点同一时间只能挂载一个设备，一个设备可以同时挂载到多个挂载点
+</code></pre>
+<h2 id="四、处理交换文件和分区"><a href="#四、处理交换文件和分区" class="headerlink" title="四、处理交换文件和分区"></a>四、处理交换文件和分区</h2><pre><code>swap交换分区是系统RAM的补充，swap分区支持虚拟内存。当没有足够的RAM保存系统处理的数据时，会将数据写入swap分区。当系统缺乏swap空间时，内核会因RAM内存耗尽而终止进程；配置过多swap空间会造成浪费
+</code></pre>
+<h2 id="五、磁盘常见命令"><a href="#五、磁盘常见命令" class="headerlink" title="五、磁盘常见命令"></a>五、磁盘常见命令</h2><pre><code>df：文件系统空间实际占用等信息的查看工具
+    df [OPTION] [FILE]
+    -H：以10位单位
+    -T：文件系统类型
+    -h：human-readable
+    -i：inodes instead of blocks
+du：查看某目录总体空间实际占用状态
+    du [OPTION] DIR
+    -h：human-readable
+    -s：summary
+    --max-depth=#：指定最大目录层级
+</code></pre>
+<h2 id="六、逻辑卷管理器LVM"><a href="#六、逻辑卷管理器LVM" class="headerlink" title="六、逻辑卷管理器LVM"></a>六、逻辑卷管理器LVM</h2><pre><code>LVM：
+    可以允许对卷进行方便操作的抽象层，包括重新设定文件系统的大小，允许在多个物理设备间重新组织文件系统。 LVM可以弹性更改LVM的容量
+逻辑卷快照：
+    快照是特殊的逻辑卷，是对生成快照时存在的逻辑卷的准确拷贝，只有在修改源逻辑卷时，才会将旧文件拷贝到快照，因此快照的大小&lt;=源逻辑卷大小
+</code></pre>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/07/10/%E9%98%BF%E9%87%8C%E4%BA%91%E8%AF%BE%E7%A8%8B-linux%E5%85%A5%E9%97%A8-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%EF%BC%88%E4%BA%8C%EF%BC%89/" data-id="clk6lo8260001jsv6cz2rcaos" data-title="阿里云课程-linux入门-学习记录（二）" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux%E5%AD%A6%E4%B9%A0/" rel="tag">linux学习</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2023/07/15/%E9%98%BF%E9%87%8C%E4%BA%91%E8%AF%BE%E7%A8%8B-linux%E5%85%A5%E9%97%A8-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%EF%BC%88%E4%B8%89%EF%BC%89/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          阿里云课程-linux入门-学习记录（三）
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2023/07/10/%E9%98%BF%E9%87%8C%E4%BA%91%E8%AF%BE%E7%A8%8B-linux%E5%85%A5%E9%97%A8-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%EF%BC%88%E4%B8%80%EF%BC%89/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">阿里云课程-linux入门-学习记录（一）</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/InLong/" rel="tag">InLong</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux%E5%AD%A6%E4%B9%A0/" rel="tag">linux学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linxu%E5%AD%A6%E4%B9%A0/" rel="tag">linxu学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/serverless/" rel="tag">serverless</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/InLong/" style="font-size: 15px;">InLong</a> <a href="/tags/linux%E5%AD%A6%E4%B9%A0/" style="font-size: 15px;">linux学习</a> <a href="/tags/linxu%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">linxu学习</a> <a href="/tags/serverless/" style="font-size: 20px;">serverless</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">July 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">May 2023</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/07/16/InLong-Learning/">InLong Learning</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/15/%E9%98%BF%E9%87%8C%E4%BA%91%E8%AF%BE%E7%A8%8B-linux%E5%85%A5%E9%97%A8-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%EF%BC%88%E4%B8%89%EF%BC%89/">阿里云课程-linux入门-学习记录（三）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/10/%E9%98%BF%E9%87%8C%E4%BA%91%E8%AF%BE%E7%A8%8B-linux%E5%85%A5%E9%97%A8-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%EF%BC%88%E4%BA%8C%EF%BC%89/">阿里云课程-linux入门-学习记录（二）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/10/%E9%98%BF%E9%87%8C%E4%BA%91%E8%AF%BE%E7%A8%8B-linux%E5%85%A5%E9%97%A8-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%EF%BC%88%E4%B8%80%EF%BC%89/">阿里云课程-linux入门-学习记录（一）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/02/InLong%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E8%AE%B0%E5%BD%95/">InLong开发环境搭建记录</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2023 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
