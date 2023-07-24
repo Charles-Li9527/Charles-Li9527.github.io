@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>docker-dockerCompose-学习 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="什么是Docker 本质： 基于Go语言开发， 基于Linux内核的cgroup、namespace，以及overlayFS类的Union FS等技术，对进程进行封装隔离，属于操作系统层面的虚拟化技术。 优点： 环境一致、高效迁移 进程及隔离，容器独立 镜像机制，便于部署">
+<meta property="og:type" content="article">
+<meta property="og:title" content="docker-dockerCompose-学习">
+<meta property="og:url" content="http://example.com/2023/07/23/docker-dockerCompose/docker-dockerCompose-%E5%AD%A6%E4%B9%A0/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="什么是Docker 本质： 基于Go语言开发， 基于Linux内核的cgroup、namespace，以及overlayFS类的Union FS等技术，对进程进行封装隔离，属于操作系统层面的虚拟化技术。 优点： 环境一致、高效迁移 进程及隔离，容器独立 镜像机制，便于部署">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/docker-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5.png">
+<meta property="og:image" content="http://example.com/docker-%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86.png">
+<meta property="og:image" content="http://example.com/Dockerfile%E8%A7%A3%E6%9E%90%E8%BF%87%E7%A8%8B.png">
+<meta property="article:published_time" content="2023-07-23T03:48:49.000Z">
+<meta property="article:modified_time" content="2023-07-24T08:22:09.369Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="docker">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/docker-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-docker-dockerCompose/docker-dockerCompose-学习" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2023/07/23/docker-dockerCompose/docker-dockerCompose-%E5%AD%A6%E4%B9%A0/" class="article-date">
+  <time class="dt-published" datetime="2023-07-23T03:48:49.000Z" itemprop="datePublished">2023-07-23</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      docker-dockerCompose-学习
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <ol>
+<li>什么是Docker<br> 本质：<br> 基于Go语言开发， 基于Linux内核的cgroup、namespace，以及overlayFS类的Union FS等技术，对进程进行封装隔离，属于操作系统层面的虚拟化技术。<br> 优点：<br> 环境一致、高效迁移<br> 进程及隔离，容器独立<br> 镜像机制，便于部署</li>
+</ol>
+<span id="more"></span>
+
+<ol start="2">
+<li><p>docker基本概念：<br> 镜像：一个镜像代表一个应用环境，是一个只读的文件<br> 容器：容器就是正在运行的镜像，特点是可读可写<br> 仓库：用来存放镜像的地方<br> dockerFile：docker生成镜像的配置文件<br> <img src="/docker-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5.png" alt="docker基本概念"></p>
+</li>
+<li><p>docker镜像的基本操作<br> docker images：查看本地仓库镜像<br> 镜像名：只列出各种版本的这种镜像<br> -q：之列出镜像id<br> docker pull 镜像名：下载镜像<br> docker search 镜像名：在docker hub搜索镜像<br> docker image rm 镜像名：删除镜像<br> -f：即使有容器在使用该镜像，也能删除<br> docker image rm -f $(docker images 容器名 -q)：批量删除镜像</p>
+</li>
+<li><p>docker容器的基本操作<br> docker ps：<br> 查看正在运行的容器<br> docker run：<br> -p：指定宿主机与容器端口的映射关系<br> -d：后台启动<br> –name：指定容器名称<br> eg：docker run -d -p 8083:8080 –name my_tomcat tomcat:latest<br>     后台运行tomcat:latest，将容器的8080端口映射到宿主机的8083端口，指定容器名为my_tomcat<br> docker stop&#x2F;kill&#x2F;start&#x2F;restart：<br> 停止&#x2F;强制停止&#x2F;启动&#x2F;重启<br> docker pause&#x2F;unpause：<br> 暂停&#x2F;恢复 容器中的所有进程<br> docker rm -f：<br> 强制删除容器（正在运行的也能删除）<br> docker rm -f $(docker ps -aq) 删除所有容器<br> docker top 容器名：<br> 查看容器内的进程<br> docker inspect 容器名：<br> 查看容器内部细节<br> docker logs [OPTIONS] 容器名：<br> 查看容器日志<br> -t：加入时间戳<br> -f：实时监控日志<br> docker exec [OPTIONS] 容器id 容器内命令<br> 进入容器执行命令<br> -i：以交互模式运行容器<br> -t：分配一个伪终端<br> docker cp 宿主机文件  容器id:容器路径：<br> 双向的，在宿主机和容器内部传递文件<br> 将容器打包成一个新的镜像：<br> docker commit -m “描述信息” -a “作者信息” 容器id 新镜像名:版本<br> 镜像备份和恢复：<br> docker save 镜像名:Tag -o 名称.tar：<br>     备份镜像<br> docker load -i 名称.tar：<br>     恢复镜像</p>
+</li>
+<li><p>镜像构成原理<br> 镜像是什么：<br> 镜像是一种轻量级的，可执行的独立软件包，用来打包软件运行环境和基于运行环境开发的软件，它包含运行某个软件所需的所有内容，包括代码、运行时库、环境变量和配置文件等<br> UnionFS联合文件系统：<br> 一种分层、轻量级、高性能的文件系统，好处是资源共享。比如有多个镜像是从相同的base镜像构建而来的，那么只需保存一份base镜像，就可以为所有容器服务。<br> 当容器启动时，一个新的可写层被加载到镜像的顶部，这一层通常被称为容器层，容器之下都叫镜像层</p>
+</li>
+<li><p>容器间通信之网络使用<br> 容器间、容器与宿主机之间通信原理：<br> 当Docker（是指这个软件，不是说某个容器）启动时，会自动在主机上创建一个docker0虚拟网桥，同时Docker随机分配一个本地未占用的私有网段地址给docker0接口。<br> 此后，启动的容器内的网口也会自动分配一个同一网段的地址，注意地址是动态分配的，所以每次启动分配的地址可能不同。可以使用docker inspect命令，在最后查看容器ip<br> 当创建一个容器时，同时会创建一对veth pair接口，接口特点是，当数据包发送到一个接口时，另外一个接口也可以收到相同的数据包。这对接口一端在容器内，即eth0，；另一端在本地并被挂载到docker0网桥，名称以veth开头。<br> 通过这种方式，主机可以跟容器通信，容器之间也能通信。Docker创建了在主机和所有容器之间的一个虚拟共享网络。<br> <img src="/docker-%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86.png" alt="docker网络通信原理"><br> 通信方式总结：<br> 1.使用ip地址通信：<br>     docker在创建容器时，默认将所有容器都连接到docker0网桥上，在docker0网桥的容器都可以使用容器内ip地址通信<br>         弊端：由于每次启动容器时ip地址是动态分配的，每次查阅ip地址很不方便<br> 2.使用容器名称进行通信：<br>     特点：只能在自定义网桥上，才能使用容器名称进行通信<br><br> 网桥之间好像没法通信？<br> 自定义网桥：<br> docker network create -d bridge（默认） 网络名称：<br>     创建自定义网桥<br> docker network ls：<br>     查看网络<br> docker network rm 网络名：<br>     删除一个网络<br> docker network prune：<br>     删除所有未被用到的网络<br> 运行多个容器在指定网络中:<br>     1.启动容器时明确指定容器使用哪个网络：<br>         docker run -d –network 网络名称 …<br>     2.启动容器之后，让容器加入到某个网络中：<br>         docker network connect 网络名 容器id(name)<br> 使用自定义网桥的场景：<br>     一般一个服务，共用一个自定义网桥。原因是不能让网桥负载过大。 </p>
+</li>
+<li><p>容器数据卷机制：<br> 数据卷：Data Volume<br> 作用：用来实现容器中数据和宿主机中数据映射（同步）<br> 注意：数据卷使用必须在容器首次启动时设置<br> 使用：docker run -v<br> 1.使用绝对路径设置数据卷<br>     docker run -v 宿主机绝对路径:容器内路径:ro …<br>         ro: 如果设置ro，那么只能在宿主机单向更改数据，可以方式误删容器导致数据丢失<br>         特点：这种方式会使容器路径内的原始内容全部清空<br>         注意：可以一次设置多个映射，多次-v即可<br> 2.使用别名方式设置数据卷<br>     docker run -v 别名:容器内路径:ro …<br>         docker根据别名创建的目录默认在&#x2F;var&#x2F;lib&#x2F;docker&#x2F;volumes<br>         别名如果存在，docker直接使用，如果不存在，自动创建<br>         特点：使用别名方式，会保留容器内路径原始内容，前提是别名对应的路径不能存在内容<br> 别名到底是什么：<br> 别名代表一个docker自身维护的数据卷<br> docker volume ls：<br>     查看所有docker维护的数据卷<br> 查看数据卷详细内容：<br>     docker inspect 数据卷别名、网桥别名、容器名称<br>     如果以上名称出现冲突，要使用以下命令<br>     docker network&#x2F;volume&#x2F;container inspect<br> docker volume rm 数据卷别名：<br>     删除一个数据卷<br> docker volume create 数据卷别名：<br>     创建一个别名数据卷</p>
+</li>
+<li><p>Dockerfile<br> 什么是Dockerfile:<br> Dockerfile是docker镜像的描述文件，是由一系列命令和参数构成的脚本，可以用来构建docker镜像<br> 为什么使用Dockerfile构建镜像：<br> 如果向构建属于我们自己业务的镜像，必须自定义镜像<br> 如何通过Dockerfile构建镜像：<br> a.在指定位置创建Dockerfile文件<br> b.通过Dockerfile构建镜像<br>     docker build -t 镜像名:Tag 指定Dockerfile文件所在位置<br> Dockerfile构建镜像流程：<br> <img src="/Dockerfile%E8%A7%A3%E6%9E%90%E8%BF%87%E7%A8%8B.png" alt="Dockerfile构建镜像流程"><br> 1）上述build会将指定目录下的所有文件都打包给Docker Server引擎，可以编写.dockerIgnore文件来剔除不相关文件；<br> 2）Docker Server引擎在通过Dockerfile构建镜像时，每运行一条指令，就会构建一个临时镜像，临时镜像存在Cache中，目的是，考虑到Dockerfile可能会反复修改，反复重新构建镜像，必定有很多重复性的工作，存在Cache中可以减少重复性的工作。  可以在build时加上 –no-cache参数来取消cache机制<br> Dockerfile基本语法：<br> 基础知识：<br>     1）每条保留字指令必须大写，后面至少跟一个参数<br>     2）指令按照从上到下，顺序执行<br>     3）#表示注释<br>     4）每条指令都会创建一个新的镜像层，并对镜像进行提交<br> Dockerfile的保留命令：<br>     1）FROM命令：<br>         基于哪个镜像构建新的镜像，在构建时会自动从docker hub拉取base镜像；必须作为Dockerfile的第一个指令出现<br>         语法：<br>             FROM <image><br>             FROM <image>[:<tag>]<br>     2） RUN命令：<br>         RUN指令将在当前映像之上的新层中执行任何命令并提交结果。生成的提交映像将用于Dockerfile中的下一步<br>         语法：<br>             RUN <command>：<br>                 shell格式，命令在shell中运行，默认是&#x2F;bin&#x2F;sh<br>                 eg: RUN apt install vim<br>             RUN [“executable”, “param1”, “param2”]<br>                 exec格式，和上述等效，但是修改格式后，就不能使用原来那一层的cache<br>     3）EXPOSE命令：<br>         当前容器对外暴露出的端口号，只是在Dockerfile中声明提示一下，对-p进行端口映射进行提示，但不限制-p的选择，也可以映射其他端口<br>         语法：<br>             EXPOSE 80&#x2F;tcp  如果没有显示指定，默认都是tcp<br>             EXPOSE 80&#x2F;udp<br>     4）WORKDIR命令：<br>         指定在创建容器后，终端默认登录进来的工作目录<br>         语法：<br>             WORKDIR &#x2F;path&#x2F;to&#x2F;workdir<br>             WORKDIR &#x2F;a<br>             WORKDIR b<br>             注意：WORKDIR指令可以在Dockerfile中多次使用；如果提供了相对路径，则该路径是与先前WORKDIR指令的路径相对<br>     5）ENV命令：<br>         用来在构建镜像的过程中设置环境变量<br>         语法：<br>             ENV <key> <value><br>             ENV <kay>&#x3D;<value><br>     6）ADD命令：<br>         将宿主机目录下的文件拷贝进镜像；ADD相比于COPY，还可以自动下载url的内容<br>         语法：<br>             ADD home* &#x2F;mydir&#x2F; 通配符添加多个文件<br>             ADD hom?.txt &#x2F;mydir&#x2F; 通配符添加<br>             ADD test.txt 相对路径&#x2F;绝对路径<br>             ADD url<br>     7）COPY命令：<br>         基础版ADD，用于拷贝文件和目录到镜像中<br>         语法：<br>             COPY src dst<br>     8）VOLUME命令：<br>         声明容器的数据卷，和EXPOSE类似，只是声明提示作用，并不局限<br>         语法：<br>             VOLUME 容器中的路径<br>                 告诉使用者，可以挂载容器中这个目录到宿主机中<br><br>     9）CMD命令与ENTRYPOINT命令<br>         CMD命令：<br>             指定一个容器启动时要运行的命令。<br>             注意：Dockerfile中可以有多个CMD命令，但只有最后一个生效，CMD会被docker run之后的参数替换<br>         ENTRYPOINT命令：<br>             指定一个容器启动时要运行的命令<br>         语法：<br>             a.直接命令方式<br>                 eg：ls &#x2F;root<br>             b.json数组方式 —— 推荐！<br>                 eg：[“ls”, “root”]<br>         区别：<br>             a.CMD里面命令如何要在运行容器时进行覆盖：<br>                 docker run 镜像:TAG 要覆盖运行的命令<br>             b.entrypoint里面命令如何在运行容器时进行覆盖：<br>                 docker run –entrypoint&#x3D;覆盖指令 镜像：TAG 指令参数<br>             可以看出，覆盖CMD指令更加简单<br>         CMD与ENTRYPOINT配合使用：<br>             entrypoint 用来书写一个固定指令<br>             cmd 用来给entrypoint的指令传参<br>             效果：可以隐藏指令，只传递参数，达到简化指令执行参数替换的效果<br>             注意：配合使用时必须使用json语法格式</p>
+</li>
+<li><p>docker-compose<br> docker-compose引入：<br> 1）容器编排至关重要：<br>     为了完成一个完整项目，势必用到多个容器，容器之间存在依赖关系，有启动的先后顺序<br> 2）项目角度管理一组容器<br> docker-compose介绍：<br> docker-compose是Docker官方的开源项目，负责实现对Docker容器集群的快速编排<br> docker-compose允许用户通过一个简单的docker-compose.yml模板文件（YAML格式）来定义一组相关联的应用容器为一个项目（project）<br> 两个重要概念：<br>     项目project：由一组关联的应用容器（服务）组成的一个完整业务单元<br>     服务service：一个项目中的某一个容器，称之为一个服务<br>     compose的默认管理对象是项目，通过子命令对项目中的一组容器进行便捷的生命周期管理<br> docker-compose模板命令：<br> a.build指令<br>     通过docker-compose在启动容器之前先根据Dockerfile构建镜像，然后根据构建的镜像启动容器<br> b.command指令<br>     覆盖容器启动后默认执行的命令<br> c.container_name指令<br>     用来指定docker-compose启动容器的名称   注意：不推荐指定容器名称<br> d.depends_on指令<br>     解决容器的依赖、启动先后问题<br>     注意：当前服务不会等待被依赖服务“完全启动”之后才启动<br> e.environment指令<br>     用来给容器启动指定环境变量， 相当于docker run -e选项<br> f.env_file指令<br>     用来给容器启动指定环境变量文件， 相当于docker run -e选项<br> g.expose指令<br>     用来指定构建镜像过程中容器暴露的端口号，一般在dockerfile中使用，不在这里用<br> h.image指令<br>     用来指定启动容器使用的镜像是谁， 相当于docker run image<br> i.networks指令<br>     用来指定启动容器使用的网桥， 相当于docker run –network<br> j.ports指令<br>     用来指定宿主机和容器端口映射， 相当于docker run -p<br> k.volumes指令<br>     用来指定宿主机中容器目录映射， 相当于docker run -v<br> l.restart指令<br>     用来指定docker容器总是运行，相当于docker run –restart&#x3D;always<br> m.healthcheck指令<br>     通过命令检查容器是否健康运行<br>     eg：<br>     <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">helthcheck:</span><br><span class="line">    test:[&quot;CMD&quot;, &quot;curl&quot;, &quot;-f&quot;, &quot;http://localhost&quot;]</span><br><span class="line">    interval:1m30s</span><br><span class="line">    timeout:10s</span><br><span class="line">    retries:3</span><br></pre></td></tr></table></figure><br><br> docker-compose.yml编写示例：<br> <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">version: &quot;3.8&quot;</span><br><span class="line"></span><br><span class="line"># 管理一组服务</span><br><span class="line">services:</span><br><span class="line"></span><br><span class="line">    tomcat:</span><br><span class="line">        image: tomcat:8.0</span><br><span class="line">        ports:</span><br><span class="line">            - &quot;8080:8080&quot;</span><br><span class="line">        networks:</span><br><span class="line">            - dangdang</span><br><span class="line">    apps:</span><br><span class="line">        build: ./   # 指定Dockerfile上下文目录context 这种方式一切都是默认值</span><br><span class="line">        build:</span><br><span class="line">            context: ./ # 用来指定Dockerfile上下文目录</span><br><span class="line">            dockerfile: Dockerfile # 指定Dockerfile文件名称</span><br><span class="line">        ports:</span><br><span class="line">            - &quot;8080:8080&quot;</span><br><span class="line">        command: [&quot;test.jar&quot;] # 用来覆盖容器启动之后的默认指令，类似于docker run image 覆盖的指令</span><br><span class="line">        depend_on:</span><br><span class="line">            - tomcat    # 依赖的服务</span><br><span class="line">        networks:</span><br><span class="line">            - dangdang</span><br><span class="line">    mysql:</span><br><span class="line">        image: mysql:5.6</span><br><span class="line">        ports:</span><br><span class="line">            - &quot;3306:306&quot;</span><br><span class="line">        # 两种方式来指明环境变量：直接指明和文件指明</span><br><span class="line">        environment:</span><br><span class="line">            MYSQL_ROOT_PASSWORD: root</span><br><span class="line">        env_file:</span><br><span class="line">            - ./.env</span><br><span class="line">        volumes:</span><br><span class="line">            - mysqlData:/var/lib/mysql</span><br><span class="line">        networks:</span><br><span class="line">            - dangdang </span><br><span class="line"></span><br><span class="line"># 声明使用网桥</span><br><span class="line">networks:</span><br><span class="line">    dangdang</span><br><span class="line"># 声明别名数据卷</span><br><span class="line">volumes:</span><br><span class="line">    mysqlData </span><br></pre></td></tr></table></figure><br> docker-compose命令：<br> 1）命令对象与格式：<br>     对于compose来说，大部分命令的对象既可以是项目本身，也可以指定为项目中的服务或容器，默认是项目本身。<br>     docker-compose [COMMAND] –help可以查看使用格式<br>     基本使用格式：<br>         docker-compose [-f&#x3D;<arg>…] [options] [COMMAND] [ARGS…]<br><br> 2）命令选项：<br>     -f：指定使用的Compose模板文件，默认为docker-compose.yml<br>     -v: 打印版本并退出<br>     –verbose：输出更多调试信息<br><br> 3）具体命令：<br>     up：<br>         格式：docker-compose up [optione] [SERVICE…]<br>         说明：当时用ctrl-c停止命令时，所有容器将会停止<br>         -d：后台启动并运行所有容器<br>         默认情况下，如果service容器已经存在，docker-compose up将会尝试停止容器，然后重新创建（但爆出使用volumes-from挂载的卷），以保证新启动的服务配置docker-compose.yml文件的最新内容<br>     down：<br>         此命令将会停止up命令启动的容器，并移除网络<br>     exec：<br>         格式为：docker-compose exec service-id bash（命令）<br>         相比于docker exec -it 容器名&#x2F;容器id bash，更简洁<br>         进入指定的容器<br>     ps：<br>         列出项目中目前的所有容器<br>         -q：只打印容器的ID信息<br>     restart：<br>         重启项目中的服务<br>         -t：指定重启前停止容器的超时，默认10秒<br>     rm：<br>         删除所有停止状态的容器，建议先stop容器，再删除<br>         -f：强制删除所有<br>         -v：删除容器所挂载的数据卷<br>     start&#x2F;stop：<br>         启动&#x2F;停止，但不删除<br>     pause&#x2F;unpause：<br>         暂停&#x2F;恢复<br>     logs：<br>         -f：实时打印日志</p>
+</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/07/23/docker-dockerCompose/docker-dockerCompose-%E5%AD%A6%E4%B9%A0/" data-id="clkglot2k0003zcv6e7g69bhk" data-title="docker-dockerCompose-学习" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/" rel="tag">docker</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2023/07/23/maven/maven-%E5%AD%A6%E4%B9%A0/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">maven 学习</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/InLong/" rel="tag">InLong</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux%E5%AD%A6%E4%B9%A0/" rel="tag">linux学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linxu%E5%AD%A6%E4%B9%A0/" rel="tag">linxu学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/" rel="tag">maven</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/serverless/" rel="tag">serverless</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/InLong/" style="font-size: 20px;">InLong</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/linux%E5%AD%A6%E4%B9%A0/" style="font-size: 15px;">linux学习</a> <a href="/tags/linxu%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">linxu学习</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/serverless/" style="font-size: 20px;">serverless</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">July 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">May 2023</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/07/23/docker-dockerCompose/docker-dockerCompose-%E5%AD%A6%E4%B9%A0/">docker-dockerCompose-学习</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/23/maven/maven-%E5%AD%A6%E4%B9%A0/">maven 学习</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/19/InLong/InLong-code-comprehension/">InLong-code-comprehension</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/16/InLong/InLong-Learning/">InLong Learning</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/15/linux/%E9%98%BF%E9%87%8C%E4%BA%91%E8%AF%BE%E7%A8%8B-linux%E5%85%A5%E9%97%A8-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%EF%BC%88%E4%B8%89%EF%BC%89/">阿里云课程-linux入门-学习记录（三）</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2023 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

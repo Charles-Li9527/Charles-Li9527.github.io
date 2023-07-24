@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>maven 学习 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="1.MavenMaven坐标主要组成：     groupid：定义当前Maven项目隶属组织名称     artifactid：定义当前Maven项目名称     version：定义当前项目版本号 依赖传递：     直接依赖：在当前项目中，通过依赖配置建立的依赖关系     间接依赖：被依赖的资源如果依赖其他资源，当前项目间接依赖其他资源 可选依赖（不透明）、排除依赖（不需要） 依赖范围：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="maven 学习">
+<meta property="og:url" content="http://example.com/2023/07/23/maven/maven-%E5%AD%A6%E4%B9%A0/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="1.MavenMaven坐标主要组成：     groupid：定义当前Maven项目隶属组织名称     artifactid：定义当前Maven项目名称     version：定义当前项目版本号 依赖传递：     直接依赖：在当前项目中，通过依赖配置建立的依赖关系     间接依赖：被依赖的资源如果依赖其他资源，当前项目间接依赖其他资源 可选依赖（不透明）、排除依赖（不需要） 依赖范围：">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-07-23T03:47:00.000Z">
+<meta property="article:modified_time" content="2023-07-24T08:22:50.947Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="maven">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-maven/maven-学习" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2023/07/23/maven/maven-%E5%AD%A6%E4%B9%A0/" class="article-date">
+  <time class="dt-published" datetime="2023-07-23T03:47:00.000Z" itemprop="datePublished">2023-07-23</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      maven 学习
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="1-Maven"><a href="#1-Maven" class="headerlink" title="1.Maven"></a>1.Maven</h1><pre><code>Maven坐标主要组成：
+    groupid：定义当前Maven项目隶属组织名称
+    artifactid：定义当前Maven项目名称
+    version：定义当前项目版本号
+依赖传递：
+    直接依赖：在当前项目中，通过依赖配置建立的依赖关系
+    间接依赖：被依赖的资源如果依赖其他资源，当前项目间接依赖其他资源
+可选依赖（不透明）、排除依赖（不需要）
+依赖范围：
+    1）主程序有效、2）测试程序有效、3）是否参与打包
+    scope取值：
+        compile（默认）：1）2）3）
+        test：2）
+        provided：1）2）
+        runtine：3）
+</code></pre>
+<span id="more"></span>
+<pre><code>依赖范围传递性
+生命周期与插件：
+    插件与生命周期内的阶段绑定，在执行到对应生命周期时执行对应的插件功能
+
+聚合：
+    作用：用于快速构建maven工程，一次性构建多个项目/模块
+    制作方式：
+        创建空模块，打包类型定义为pom：&lt;packaging&gt;pom&lt;/packaging&gt;
+        定义关联的其他模块名称：
+            &lt;modules&gt;
+                &lt;module&gt;...&lt;/module&gt;
+            &lt;/modules&gt;
+    模块类型：jar、war、pom
+    
+继承：
+    作用：通过继承可以实现在子工程中沿用父工程中的配置
+    制作方式：
+        子工程定义：
+            &lt;parent&gt;
+                &lt;groupId&gt;&lt;/groupId&gt;
+                &lt;artifactId&gt;&lt;/artifactId&gt;
+                &lt;version&gt;&lt;/version&gt;
+                &lt;relativePath&gt;&lt;/relativePath&gt;
+            &lt;/parent&gt;
+
+继承与聚合：
+    作用：
+        聚合用于快速构建项目
+        继承用于快速配置
+    相同点：
+        聚合与继承的pom.xml文件打包方式均为pom，可以将两种关系制作到同一pom文件中
+        聚合与继承均属于设计型模块，无实际的模块内容
+    不同点：
+        聚合是在当前模块中配置关系，聚合可以感知到参与聚合的模块有哪些
+        继承是在子模块中配置关系，父模块无法感知哪些子模块继承了自己
+属性：
+    作用：等同于定义变量，方便统一维护
+    定义格式：
+        &lt;properties&gt;
+            &lt;junit.version&gt;4.12&lt;/junit.version&gt;
+        &lt;/properties&gt;
+    调用格式：
+        $&#123;junit.version&#125;
+    内置属性：
+        $&#123;version&#125;
+        $&#123;basedir&#125;
+    setting属性：
+        $&#123;setting.localRepository&#125;
+        $&#123;setting.xxxx&#125;
+    java系统属性：
+        $&#123;user.home&#125;
+        系统属性查询方式：mvn help:system
+版本管理：
+    SNAPSHOT：快照版本
+    RELEASE：发布版本
+在配置文件中如何引用pom属性：
+    作用：在任意配置文件中加载pom文件中定义的属性
+    调用格式：$&#123;jdbc.url&#125;
+    开启配置文件加载pom属性：
+        &lt;resources&gt;
+            &lt;resource&gt;
+                &lt;directory&gt;$&#123;project.basedir&#125;/src/main/resources&lt;/directory&gt;
+                &lt;filtering&gt;true&lt;/filtering&gt;
+            &lt;/resource&gt;
+        &lt;/resources&gt;
+
+多环境配置：
+    创建多环境：
+        &lt;profiles&gt;
+            定义具体的环境：生产环境
+            &lt;profile&gt;
+                &lt;id&gt;pro_env&lt;/id&gt;
+                定义环境中专用的属性值
+                &lt;properties&gt;
+                    &lt;junit.version&gt;4.12&lt;/junit.version&gt;
+                &lt;/properties&gt;
+                设置默认启动
+                &lt;activation&gt;
+                    &lt;activeByDefault&gt;true&lt;/activeByDefault&gt;
+                &lt;/activation&gt;
+            &lt;/profile&gt;
+
+            定义具体的环境：开发环境
+            &lt;profile&gt;
+                &lt;id&gt;dev_env&lt;/id&gt;
+                ...
+            &lt;/profile&gt;
+        &lt;/profiles&gt;
+    加载指定环境：
+        调用格式：
+            mvn 指令 -P环境id
+
+跳过测试：
+    命令行：-DskipTests
+    使用配置：pom文件写plugin组件
+
+私服：
+    仓库分类：
+        宿主仓库hosted：
+            保存无法从中央仓库获取的资源：自主研发、第三方非开源项目
+        代理仓库proxy：
+            代理远程仓库，通过nexus访问其他公共仓库，例如中央仓库
+        仓库组group：
+            将若干个仓库组成一个群组，简化配置
+            仓库组不能保存资源，属于设计型仓库
+
+生命周期：
+    作用：为了让构建过程自动化完成，maven设定了三个生命周期，生命周期中的每一个环节对应构建过程中的一个操作
+    三个生命周期：
+        Clean：清理相关操作，包括pre-clean、clean、post-clean三个环节
+        Site：生成相关站点，包括pre-site、site、post-site、deploy-site环节
+        Default：主要构建过程，包括很多环节
+    特点：
+        三个生命周期时彼此独立的
+        在任何一个生命周期内部执行任何一个具体环节的操作，都是从本周期最初的位置开始执行，直到指定的地方
+
+插件和目标：
+    插件：
+        maven的核心程序仅仅负责宏观调度，不做具体工作
+        具体工作都由maven插件来完成
+    目标：
+        一个插件可以对应多个目标，每一个目标都和生命周期中的某一个环节对应
+        例如，Default生命周期中有compile和test-compile两个和编译相关的环节，这两个环节对应compile和test-compile两个目标，这两个目标都是由maven-compiler-plugin-3.1.jar插件来执行的
+
+build标签：
+    作用：定制构建过程
+    使用场景：当项目中的多个模块存在相同的插件时，应当将插件配置移动到父模块的pluginMangement元素中
+    子标签分类：
+        定义约定的目录结构：
+            &lt;sourceDirectory&gt;../../&lt;/sourceDirectory&gt;
+            &lt;scriptSourceDirectory&gt;../../&lt;/scriptSourceDirectory&gt;
+        备用插件管理：
+            pluginManagement标签存放着几个极少用到的插件：
+                maven-antrun-plugin
+                maven-assembly-plugin
+                maven-dependency-plugin
+                maven-release-plugin
+                等等
+            通过pluginManagement标签管理起来的插件就像dependencyManagement一样，子工程使用时可以省略版本号，起到在父工程中统一管理版本的效果
+        生命周期插件：
+            plugins标签存放的是默认生命周期中实际会使用到的插件。
+            plugin内标签详解：
+                坐标部分：熟悉的groupId、artifactId
+                执行部分：executions标签内可以配置多个execution标签，execution标签内：
+                    id：指定唯一标识
+                    phase：关联的生命周期阶段，表示当执行到声明周期的这个阶段时，调用该插件
+                    goals/goal：关联指定生命周期的目标
+                    configuration：configuration标签内进行配置时使用的标签是插件本身定义的
+
+profile标签详解：
+    背景：一般情况下，项目都有开发环境、测试环境和生产环境，不同环境的配置信息不同。
+    作用：在maven中，使用profile机制来管理不同环境下的配置信息，用哪个环境，就激活哪个profile
+    默认profile：
+        即使在pom.xml中不配置profile标签，也已经用到profile了。因为根标签project下所有的标签，都相当于是默认的profile下。
+    profile配置：
+        外部视角：配置文件
+            profile可以在下面两种文件中配置：
+                settings.xml：全局生效
+                pom.xml：当前POM生效
+        内部视角：具体标签
+            profiles/profile标签
+            id标签：指定该profile的唯一标识，命令行通过-D&lt;profile id&gt;调用指定的profile
+            其他标签：build、dependency等等   注：activation标签用于指定profile的激活条件
+
+lifecycle、phase、goal的理解：
+    [参考：https://blog.csdn.net/glory1234work2115/article/details/51570073]
+    [实战自定义插件，见尚硅谷maven课程156、157P，可加深理解]
+    lifecycle：
+        生命周期，maven最高级别的控制单元，由一系列的phase组成
+    phase：
+        可以理解为任务单元，lifecycle是总任务，phase就是子任务。一个phase至少要绑定一个goal，没有goal的phsae是没有意义的
+    goal：
+        知识执行任务的最小单元，goal也是按顺序执行的，一个phase被执行时，当订到phase里的goal会按被绑定的时间顺序执行
+    mojo：
+        lifecycle、phase、goal都是概念上的东西，mojo才做具体的事情，可以简单理解mojo为goal的实现类
+    注意！！
+        lifecycle中的phase执行时，会从所属lifecycle的起点开始执行，直到执行自己这个phase；而plugin中的goal知识单单执行当前指定的goal；
+        例如，执行install:install只会执行install plugin中的install这个goal，但是项目创建后还没有进行之前必要的步骤，比如compile，这样的话install:install肯定会出错的
+
+        所以某个plugin:某个phase:某个goal的含义是，该插件在该phase时被调用，用于执行goal目标
+
+POM的四个层次：
+    super POM：
+        在maven构建过程中的很多默认设定，比如源文件存放的目录、构建输出的目录等等，这些要素也都是被maven定义过的，定义的位置就是：super POM
+        所有POM，默认继承super POM；就好比一个java类默认继承Object类
+    父POM：
+    当前POM：
+    有效POM：
+        effective POM——在POM的继承关系中，子POM可以覆盖父POM中的配置；如果没有覆盖，就会继承父POM配置。继承关系中的所有POM叠加到一起，就得到了最终生效的POM，叫effective POM
+        有效pom查看：mvn help:effective-pom
+
+命令行查看属性值：
+    mvn help:evaluate
+
+依赖配置补充：
+    除了compile、test、provided这三个scope外，还有其他scope，比如import。
+    import可以实现maven项目的多继承，import的使用要求是：
+    · 打包类型必须是pom
+    · 必须放在dependencyManagement中
+
+依赖版本仲裁：
+    1）最短路径优先：
+        比如项目a引用了依赖b、依赖c；依赖b依赖于依赖d，依赖d依赖于依赖e-1.2；依赖c依赖于依赖e-1.1；所以项目a存在依赖同一个包的不同版本问题，首先按照最短路径优先，决定项目a采用哪个依赖
+    2）路径相同时，先声明者优先
+
+maven常用标签：
+    [参考：https://blog.csdn.net/renhuan28/article/details/81203494#]
+
+spotless插件：统一代码格式
+    [参考：https://blog.csdn.net/qq_42651904/article/details/127175643]
+</code></pre>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/07/23/maven/maven-%E5%AD%A6%E4%B9%A0/" data-id="clkglot2w000fzcv6c2x38q9b" data-title="maven 学习" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/maven/" rel="tag">maven</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2023/07/23/docker-dockerCompose/docker-dockerCompose-%E5%AD%A6%E4%B9%A0/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          docker-dockerCompose-学习
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2023/07/19/InLong/InLong-code-comprehension/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">InLong-code-comprehension</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/InLong/" rel="tag">InLong</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux%E5%AD%A6%E4%B9%A0/" rel="tag">linux学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linxu%E5%AD%A6%E4%B9%A0/" rel="tag">linxu学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/" rel="tag">maven</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/serverless/" rel="tag">serverless</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/InLong/" style="font-size: 20px;">InLong</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/linux%E5%AD%A6%E4%B9%A0/" style="font-size: 15px;">linux学习</a> <a href="/tags/linxu%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">linxu学习</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/serverless/" style="font-size: 20px;">serverless</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">July 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">May 2023</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/07/23/docker-dockerCompose/docker-dockerCompose-%E5%AD%A6%E4%B9%A0/">docker-dockerCompose-学习</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/23/maven/maven-%E5%AD%A6%E4%B9%A0/">maven 学习</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/19/InLong/InLong-code-comprehension/">InLong-code-comprehension</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/16/InLong/InLong-Learning/">InLong Learning</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/15/linux/%E9%98%BF%E9%87%8C%E4%BA%91%E8%AF%BE%E7%A8%8B-linux%E5%85%A5%E9%97%A8-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%EF%BC%88%E4%B8%89%EF%BC%89/">阿里云课程-linux入门-学习记录（三）</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2023 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>InLong-code-comprehension | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="项目pom文件理解 jacoco-maven-plugin插件： 可以生成单元测试覆盖率报告，本项目具体用途还不清楚 maven-source-plugin插件： 负责将项目源文件打成包 参考：[!https:&#x2F;&#x2F;blog.csdn.net&#x2F;liaowenxiong&#x2F;article&#x2F;details&#x2F;124879376] spotless插件： 统一代码格式 参考：[!https:&#x2F;&#x2F;blog.c">
+<meta property="og:type" content="article">
+<meta property="og:title" content="InLong-code-comprehension">
+<meta property="og:url" content="http://example.com/2023/07/19/InLong/InLong-code-comprehension/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="项目pom文件理解 jacoco-maven-plugin插件： 可以生成单元测试覆盖率报告，本项目具体用途还不清楚 maven-source-plugin插件： 负责将项目源文件打成包 参考：[!https:&#x2F;&#x2F;blog.csdn.net&#x2F;liaowenxiong&#x2F;article&#x2F;details&#x2F;124879376] spotless插件： 统一代码格式 参考：[!https:&#x2F;&#x2F;blog.c">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-07-19T12:56:06.000Z">
+<meta property="article:modified_time" content="2023-07-22T10:39:47.119Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="InLong">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-InLong/InLong-code-comprehension" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2023/07/19/InLong/InLong-code-comprehension/" class="article-date">
+  <time class="dt-published" datetime="2023-07-19T12:56:06.000Z" itemprop="datePublished">2023-07-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      InLong-code-comprehension
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <ol>
+<li><p>项目pom文件理解<br> jacoco-maven-plugin插件：<br> 可以生成单元测试覆盖率报告，本项目具体用途还不清楚<br> maven-source-plugin插件：<br> 负责将项目源文件打成包<br> 参考：[!<a target="_blank" rel="noopener" href="https://blog.csdn.net/liaowenxiong/article/details/124879376]">https://blog.csdn.net/liaowenxiong/article/details/124879376]</a><br> spotless插件：<br> 统一代码格式<br> 参考：[!<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_42651904/article/details/127175643">https://blog.csdn.net/qq_42651904/article/details/127175643</a><br> apache-rat-plugin插件：<br> 检查项目中的许可证信息<br> maven-assembly-plugin插件：<br> 作用：<br>     允许用户将项目输出与它的依赖项、模块、站点文档、和其他文件一起组装成一个可分发的归档文件<br> 如何使用：<br>     1.指定一个assembly描述符文件。该文件指定了打包格式，包含&#x2F;过滤的文件<br>     2.在maven工程的pom.xml文件里配置maven-assembly-plugin插件，引入assembly描述符文件<br> 参考：[!<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/368567423]">https://zhuanlan.zhihu.com/p/368567423]</a></p>
+</li>
+<li><p>inlong-distribution子项目作用：<br> 打包，将所有inlong组件打包</p>
+</li>
+<li><p>修改tubeMQ后，如何只对修改部分编译，然后重新打成包<br>inlong-tubeMQ子模块是一个相对于inlong-manager、inlong-sort等其他模块的独立模块，与这些模块不存在依赖关系。因此，当修改tubeMQ模块后，只需要对该模块重新编译，然后用inlong-distribution打包即可。或者，如果打包时间比较长，手动将tubeMQ编译后的文件在inlong-distribution中进行更新即可<br> 多模块编译子模块规则参考：<br> [!<a target="_blank" rel="noopener" href="https://blog.csdn.net/Demi_nini/article/details/122100594]">https://blog.csdn.net/Demi_nini/article/details/122100594]</a><br> [!<a target="_blank" rel="noopener" href="https://blog.csdn.net/ththcc/article/details/103769851]">https://blog.csdn.net/ththcc/article/details/103769851]</a></p>
+</li>
+<li><p>如何用java开发命令行工具<br>参考：<br> <a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1366912">https://cloud.tencent.com/developer/article/1366912</a><br> <a target="_blank" rel="noopener" href="https://blog.csdn.net/adalf90/article/details/80492795">https://blog.csdn.net/adalf90/article/details/80492795</a><br> <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/335628792">https://zhuanlan.zhihu.com/p/335628792</a><br> <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/435614563">https://zhuanlan.zhihu.com/p/435614563</a></p>
+</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/07/19/InLong/InLong-code-comprehension/" data-id="clkglot2l0005zcv61lx35lop" data-title="InLong-code-comprehension" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/InLong/" rel="tag">InLong</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2023/07/23/maven/maven-%E5%AD%A6%E4%B9%A0/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          maven 学习
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2023/07/16/InLong/InLong-Learning/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">InLong Learning</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/InLong/" rel="tag">InLong</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux%E5%AD%A6%E4%B9%A0/" rel="tag">linux学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linxu%E5%AD%A6%E4%B9%A0/" rel="tag">linxu学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/" rel="tag">maven</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/serverless/" rel="tag">serverless</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/InLong/" style="font-size: 20px;">InLong</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/linux%E5%AD%A6%E4%B9%A0/" style="font-size: 15px;">linux学习</a> <a href="/tags/linxu%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">linxu学习</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/serverless/" style="font-size: 20px;">serverless</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">July 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">May 2023</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/07/23/docker-dockerCompose/docker-dockerCompose-%E5%AD%A6%E4%B9%A0/">docker-dockerCompose-学习</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/23/maven/maven-%E5%AD%A6%E4%B9%A0/">maven 学习</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/19/InLong/InLong-code-comprehension/">InLong-code-comprehension</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/16/InLong/InLong-Learning/">InLong Learning</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/15/linux/%E9%98%BF%E9%87%8C%E4%BA%91%E8%AF%BE%E7%A8%8B-linux%E5%85%A5%E9%97%A8-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%EF%BC%88%E4%B8%89%EF%BC%89/">阿里云课程-linux入门-学习记录（三）</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2023 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
