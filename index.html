@@ -73,6 +73,278 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Java/Java" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2023/07/27/Java/Java/" class="article-date">
+  <time class="dt-published" datetime="2023-07-27T10:04:45.000Z" itemprop="datePublished">2023-07-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2023/07/27/Java/Java/">Java语言</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="1-Java的反射机制"><a href="#1-Java的反射机制" class="headerlink" title="1.Java的反射机制"></a>1.Java的反射机制</h1><h2 id="一、Java反射机制概述"><a href="#一、Java反射机制概述" class="headerlink" title="一、Java反射机制概述"></a>一、Java反射机制概述</h2><pre><code>1）Relfection（反射）被视为是“动态语言”的关键，反射机制允许程序在执行期间借助Reflection API取得任何类的内部信息，并能直接操作任意对象的内部属性及方法
+2）加载完类之后，在堆内存的方法区中就产生了一个Class类型的对象（一个类只有一个Class对象），这个对象包含了完整的类的结构信息。我们可以通过这个对象看到类的结构，这个对象就像一面镜子，透过这个镜子看到累的结构，所以形象地称之为反射
+    正常方式：引入需要的“包类”名称 ---&gt; 通过new实例化 ---&gt; 取得实例化对象
+    反射方式：实例化对象 ---&gt;getClass()方法（拿到上面的Class对象） ---&gt;得到完整的“包类”名称...
+
+动态语言 VS 静态语言：
+    动态语言：
+        是一类在运行时可以改变其结构的语言：例如新的函数、对象、甚至代码都可以被引进。
+        主要动态语言：
+            C+，JavaScript、PHP、Python
+    静态语言：
+        运行时结构不可变的语言就是静态语言，比如Java、C、C++
+        Java不是动态语言，但有一定的动态性，可以利用反射机制、字节码操作获得类似动态语言的特性，Java的动态性让编程更加灵活  
+Java反射机制提供的功能：
+    在运行时判断任意一个对象所属的类
+    在运行时构造任意一个类的对象
+    在运行时判断任意一个类所具有的成员变量和方法
+    在运行时获取泛型信息
+    在运行时调用任意一个对象的成员变量和方法
+    在运行时处理注解
+    生成动态代理
+反射相关的主要API：
+    java.lang.Class:代表一个类
+    java.lang.reflect.Method:代表类的方法
+    java.lang.reflect.Field:代表类的成员变量
+    java.lang.reflect.Constructor:代表类的构造器
+</code></pre>
+<h2 id="二、理解Class类并获取Class实例"><a href="#二、理解Class类并获取Class实例" class="headerlink" title="二、理解Class类并获取Class实例"></a>二、理解Class类并获取Class实例</h2><pre><code>Class类：
+    在Object类中定义了 public final Clas getClass()方法，此方法被所有子类继承，返回值是一个Class类，此类是Java反射的源头
+    对每个类而言，JRE都为其保留了一个不变的Class类型的对象，该Class类型对象保留了某个结构（不只是类，如class/interface/annoation/primitive type等）的有关信息
+
+获取Class类实例的四种方法
+    1) Class clazz = String.class
+    2) Class clazz = &quot;java.lang.String&quot;
+    3) Class clazz = Class.forName(&quot;java.lang.String)
+    4) 使用类的加载器
+</code></pre>
+<h2 id="三、类的加载与ClassLoader的理解"><a href="#三、类的加载与ClassLoader的理解" class="headerlink" title="三、类的加载与ClassLoader的理解"></a>三、类的加载与ClassLoader的理解</h2><pre><code>了解：类的加载过程：
+    当程序使用某个类时，如果该类还未被加载到内存中，系统会通过如下三个步骤进行初始化：
+        类的加载（Load）：
+            将类的class文件读入内存，并为之创建一个java.lang.Class对象。此过程由类加载器完成
+        类的链接（Link）：
+            将类的二进制代码合并到JRE中
+        类的初始化（Initialize）：
+            JVM负责对类进行初始化
+
+了解：类加载器的作用：
+    类加载：将字节码文件加载到内存，生成一个代表这个类的java.lang.Class对象，作为类数据的访问入口
+    类缓存：一旦某个类被加载到类加载器中，将缓存一段时间。JVM的垃圾回收机制可以回收这些Class对象
+</code></pre>
+<h2 id="四、创建运行时类的对象"><a href="#四、创建运行时类的对象" class="headerlink" title="四、创建运行时类的对象"></a>四、创建运行时类的对象</h2><pre><code>newInstance()方法，调用无参构造器
+其他方法调用有参构造器
+</code></pre>
+<h2 id="五、获取运行时类的完整结构"><a href="#五、获取运行时类的完整结构" class="headerlink" title="五、获取运行时类的完整结构"></a>五、获取运行时类的完整结构</h2><pre><code>可以拿到运行时类的
+    实现的全部接口
+    继承的父类
+    全部的构造器
+    全部的方法
+    全部的Field
+</code></pre>
+<h2 id="六、调用运行时类的指定结构"><a href="#六、调用运行时类的指定结构" class="headerlink" title="六、调用运行时类的指定结构"></a>六、调用运行时类的指定结构</h2><pre><code>可以调用：
+    指定方法
+    指定属性等
+</code></pre>
+<h2 id="七、反射的应用：动态代理"><a href="#七、反射的应用：动态代理" class="headerlink" title="七、反射的应用：动态代理"></a>七、反射的应用：动态代理</h2><pre><code>代理设计模式的原理：
+    使用一个代理，将对象包装起来，然后用该代理对象取代原始对象。人核对原始对象的调用都要通过代理
+静态代理：
+    特征是代理类和目标对象的类在编译期间就确定下来了，不利于程序的扩展。同时每一个代理类只能为一个接口服务。
+    [参考：静态代理：https://blog.csdn.net/qq_38974634/article/details/81255599]
+动态代理：
+    客户通过代理类带调用其他对象，并且是在程序运行时根据需要动态创建目标类的代理对象。可以实现通过一个代理类完成全部的代理功能。
+    [参考：动态代理：https://blog.csdn.net/qq_38974634/article/details/81256347]
+
+
+动态代理与AOP：
+    AOP：Aspect Orient Programming 面向切面编程
+        AOP能让我们在不影响原有功能的前提下，为软件横向扩展功能。
+    从前：
+        多个代码段含有相同代码段的处理是，将相同代码段独立成函数。
+        这样的弊端是，代码段和函数硬编码耦合了
+    理想情况：
+        固定代码段 + 动态可修改的代码段
+    实现方式：
+        动态代理
+        AOP代理的方法：
+            动态代理里增加的通用方法1（硬编码）
+            回调目标对象的方法（动态）       
+            动态代理增加的通用方法2（硬编码） 
+</code></pre>
+<h2 id="八、其他"><a href="#八、其他" class="headerlink" title="八、其他"></a>八、其他</h2><pre><code>什么是Java Bean：
+    JavaBean是一种特殊、可重用的Java类。必须有无参数的构造器，所有属性都是private的，通过提供getter和setter来实现对成员属性的访问，需要被序列化并且实现了java.io.Serializable接口
+    ![参考：https://www.cnblogs.com/jyroy/p/11102298.html]
+
+jar包的一些事：
+    [参考：https://zhuanlan.zhihu.com/p/82320492]
+    jar包简介：
+        jar包，Java Archive File，jar包主要对.class文件进行打包，由于.class字节码文件是平台无关的，所以jar包也是平台无关的。
+    jar包内容说明：
+        jar包与zip包十分相似，唯一区别是jar包中包含了一些说明文件，对jar包版本、搜索路径、Main方法入口等进行了说明。
+        除了.MF说明文件、.class文件外，jar还能打包静态资源文件如.html、.css等项目所需的一切，无论是web应用还是底层狂框架，都能打成jar包
+    jar包执行：
+        有的jar包可以通过java -jar来执行。能执行是因为有main函数，说明文件提供了函数入口
+    为什么要打jar包：
+        将整个项目封装起来，同时提供清晰地说明文档，供人方便地调用
+    jar包和war包的区别：
+        war是一个可以直接运行的web模块，将war包放在tomcat根目录的webapps下，tomcat启动，这个包就会自动解压，相当于发布
+        war包的内容jar包也能打，而且war包仅用于Web应用，因此主流应用目前都用jar替代war。war相对于jar的唯一优势在于，tomcat启动后会自动将war包解压，对外提供web服务，而jar包不行。
+        操作方法为：将tomcat和war包打成一个jar包，放在容器里单独运行。
+</code></pre>
+<h1 id="2-异常处理"><a href="#2-异常处理" class="headerlink" title="2.异常处理"></a>2.异常处理</h1><pre><code>什么时候用try-catch、什么时候用throws：
+    <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">func1() &#123;</span><br><span class="line">    func2()</span><br><span class="line">    func3()</span><br><span class="line">    func4()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    以上述代码段为例，func1()先后调用了234，标准做法是func1用try-catch，234用throws
+    原因是，如果234用了try-catch，那么异常就在内部被处理了，即使出现了异常，代码也会继续往下执行，这样是不正确不安全的
+</code></pre>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/07/27/Java/Java/" data-id="clkqj5jt60000psv63xbbdmop" data-title="Java语言" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/" rel="tag">Java</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Java/JDBC" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2023/07/26/Java/JDBC/" class="article-date">
+  <time class="dt-published" datetime="2023-07-26T03:49:54.000Z" itemprop="datePublished">2023-07-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2023/07/26/Java/JDBC/">JDBC</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>serverlet：消息接收、处理和响应<br>JSP：页面的动态显示<br>Ajax：异步请求</p>
+<h1 id="1-JDBC概述"><a href="#1-JDBC概述" class="headerlink" title="1.JDBC概述"></a>1.JDBC概述</h1><h2 id="一、Java中的数据存储技术"><a href="#一、Java中的数据存储技术" class="headerlink" title="一、Java中的数据存储技术"></a>一、Java中的数据存储技术</h2><pre><code>在Java中，数据库存取技术可分为如下几类：
+    JDBC直接访问数据库
+    JDO(Java Data Object)技术
+    第三方O/R工具，如Hibernate、Mybatis
+JDBC是Java访问数据库的基石，JDO、Hibernate、MyBatis等只是更好的封装了JDBC
+</code></pre>
+<h2 id="二、JDBC介绍"><a href="#二、JDBC介绍" class="headerlink" title="二、JDBC介绍"></a>二、JDBC介绍</h2><pre><code>JDBC是一个独立于特定数据库管理系统、通用的SQL数据库存取和操作的公共接口（一组API），定义了用来访问数据库的标准Java类库，运行模式为：
+    数据库厂商提供JDBC驱动程序，Java程序员直接调用统一API，大大加快开发过程
+JDBC本质：
+    一组规范、接口
+</code></pre>
+<h2 id="三、JDBC体系结构"><a href="#三、JDBC体系结构" class="headerlink" title="三、JDBC体系结构"></a>三、JDBC体系结构</h2><pre><code>JDBC接口包括两个层次：
+    面向程序员的API：Java API，抽象接口，供应用程序开发人员使用
+    面向数据库的API：Java Driver API，供开发商开发数据库驱动程序使用
+</code></pre>
+<h1 id="2-获取数据库连接"><a href="#2-获取数据库连接" class="headerlink" title="2.获取数据库连接"></a>2.获取数据库连接</h1><p>IDEA通过maven以JDBC方式连接Mysql数据库：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/dadian/p/11938707.html">https://www.cnblogs.com/dadian/p/11938707.html</a><br>Java中Class.ForName()的理解：<br>    <a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_22059611/article/details/84347957">https://blog.csdn.net/qq_22059611/article/details/84347957</a><br>    <a target="_blank" rel="noopener" href="https://blog.csdn.net/hbiao68/article/details/17113987">https://blog.csdn.net/hbiao68/article/details/17113987</a></p>
+<h1 id="3-使用PreparedStatement实现CRUD操作"><a href="#3-使用PreparedStatement实现CRUD操作" class="headerlink" title="3.使用PreparedStatement实现CRUD操作"></a>3.使用PreparedStatement实现CRUD操作</h1><h2 id="一、操作和访问数据库"><a href="#一、操作和访问数据库" class="headerlink" title="一、操作和访问数据库"></a>一、操作和访问数据库</h2><pre><code>Statement：用于执行静态SQL语句，并返回他生成的结构
+PreparedStatement：SQL语句被预编译并存储在此对象中，可以使用此对象多次高效地执行该语句
+CallableStatement：用于执行SQL存储过程
+</code></pre>
+<h2 id="二、使用Statement操作数据表的弊端"><a href="#二、使用Statement操作数据表的弊端" class="headerlink" title="二、使用Statement操作数据表的弊端"></a>二、使用Statement操作数据表的弊端</h2><pre><code>1）存在拼串操作，繁琐
+2）存在SQL注入问题
+    指利用某些系统没有对用户输入的数据进行充分的检查，而在用户输入数据中注入非法的SQL语句段或命令，从而利用系统的SQL引擎完成恶意行为的做法
+</code></pre>
+<h2 id="三、PreparedStatement的使用"><a href="#三、PreparedStatement的使用" class="headerlink" title="三、PreparedStatement的使用"></a>三、PreparedStatement的使用</h2><pre><code>介绍：
+    PreparedStatement接口是Statement的子接口，他表示一条预编译过的SQL语句
+PreparedStatement VS Statement：
+    1）前者可读性和可维护性更高
+    2）前者能最大可能提高性能：
+        DBServer会对预编译语句提供性能优化
+    3）前者可以防止SQL注入
+</code></pre>
+<h2 id="四、ResultSet与ResultMetaData"><a href="#四、ResultSet与ResultMetaData" class="headerlink" title="四、ResultSet与ResultMetaData"></a>四、ResultSet与ResultMetaData</h2><pre><code>ResultSet：
+    ResultSet返回的实际上就是一张数据表，有一个指针指向数据表的第一条记录
+ResultSetMetaData：
+    可以用于获取关于ResultSet对象中列的类型和属性信息
+</code></pre>
+<h2 id="五、资源的释放"><a href="#五、资源的释放" class="headerlink" title="五、资源的释放"></a>五、资源的释放</h2><pre><code>需要释放：ResultSet、Statement、Connection
+</code></pre>
+<h2 id="六、JDBC-API小结"><a href="#六、JDBC-API小结" class="headerlink" title="六、JDBC API小结"></a>六、JDBC API小结</h2><pre><code>两种思想：
+    面向接口编程的思想
+    ORM思想（Object Relational Mapping）
+        一个数据表对应一个java类
+        表中的一条记录对应java类的一个对象
+        表中的一个字段对应java类的一个属性
+两种技术：
+    JDBC结果集的元数据：ResultSetMetaData
+    通过反射，创建指定类的对象，获取指定的属性并赋值
+</code></pre>
+<h1 id="4-操作BLOB类型字段"><a href="#4-操作BLOB类型字段" class="headerlink" title="4.操作BLOB类型字段"></a>4.操作BLOB类型字段</h1><pre><code>MySQL BLOB类型：
+
+向数据表中插入大数据类型：
+
+修改数据表中的Blob类型字段：
+
+从数据表中读取大数据类型：
+</code></pre>
+<h1 id="5-批量插入"><a href="#5-批量插入" class="headerlink" title="5.批量插入"></a>5.批量插入</h1><pre><code>批量执行SQL语句：
+
+高效的批量插入：
+</code></pre>
+<h1 id="6-数据库事务"><a href="#6-数据库事务" class="headerlink" title="6.数据库事务"></a>6.数据库事务</h1><pre><code>数据库事务介绍：
+
+JDBC事务处理：
+
+事务的ACID属性：
+</code></pre>
+<h1 id="7-DAO及相关实现类"><a href="#7-DAO及相关实现类" class="headerlink" title="7.DAO及相关实现类"></a>7.DAO及相关实现类</h1><h1 id="8-数据库连接池"><a href="#8-数据库连接池" class="headerlink" title="8.数据库连接池"></a>8.数据库连接池</h1><pre><code>JDBC数据库连接池的必要性：
+
+数据库连接池技术：
+
+多种开源的数据库连接池：
+</code></pre>
+<h1 id="9-Apache-DBUtils实现CRUD操作"><a href="#9-Apache-DBUtils实现CRUD操作" class="headerlink" title="9.Apache-DBUtils实现CRUD操作"></a>9.Apache-DBUtils实现CRUD操作</h1><pre><code>Apache-DBUtils简介：
+
+主要API的使用：
+</code></pre>
+<h1 id="10-JDBC总结"><a href="#10-JDBC总结" class="headerlink" title="10.JDBC总结"></a>10.JDBC总结</h1>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/07/26/Java/JDBC/" data-id="clkqj5jtc0001psv6718x3ywy" data-title="JDBC" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/" rel="tag">Java</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-docker-dockerCompose/docker-dockerCompose-学习" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2023/07/23/docker-dockerCompose/docker-dockerCompose-%E5%AD%A6%E4%B9%A0/" class="article-date">
@@ -203,16 +475,13 @@
     <div class="e-content article-entry" itemprop="articleBody">
       
         <ol>
-<li><p>项目pom文件理解<br> jacoco-maven-plugin插件：<br> 可以生成单元测试覆盖率报告，本项目具体用途还不清楚<br> maven-source-plugin插件：<br> 负责将项目源文件打成包<br> 参考：[!<a target="_blank" rel="noopener" href="https://blog.csdn.net/liaowenxiong/article/details/124879376]">https://blog.csdn.net/liaowenxiong/article/details/124879376]</a><br> spotless插件：<br> 统一代码格式<br> 参考：[!<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_42651904/article/details/127175643">https://blog.csdn.net/qq_42651904/article/details/127175643</a><br> apache-rat-plugin插件：<br> 检查项目中的许可证信息<br> maven-assembly-plugin插件：<br> 作用：<br>     允许用户将项目输出与它的依赖项、模块、站点文档、和其他文件一起组装成一个可分发的归档文件<br> 如何使用：<br>     1.指定一个assembly描述符文件。该文件指定了打包格式，包含&#x2F;过滤的文件<br>     2.在maven工程的pom.xml文件里配置maven-assembly-plugin插件，引入assembly描述符文件<br> 参考：[!<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/368567423]">https://zhuanlan.zhihu.com/p/368567423]</a></p>
-</li>
-<li><p>inlong-distribution子项目作用：<br> 打包，将所有inlong组件打包</p>
-</li>
-<li><p>修改tubeMQ后，如何只对修改部分编译，然后重新打成包<br>inlong-tubeMQ子模块是一个相对于inlong-manager、inlong-sort等其他模块的独立模块，与这些模块不存在依赖关系。因此，当修改tubeMQ模块后，只需要对该模块重新编译，然后用inlong-distribution打包即可。或者，如果打包时间比较长，手动将tubeMQ编译后的文件在inlong-distribution中进行更新即可<br> 多模块编译子模块规则参考：<br> [!<a target="_blank" rel="noopener" href="https://blog.csdn.net/Demi_nini/article/details/122100594]">https://blog.csdn.net/Demi_nini/article/details/122100594]</a><br> [!<a target="_blank" rel="noopener" href="https://blog.csdn.net/ththcc/article/details/103769851]">https://blog.csdn.net/ththcc/article/details/103769851]</a></p>
-</li>
-<li><p>如何用java开发命令行工具<br>参考：<br> <a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1366912">https://cloud.tencent.com/developer/article/1366912</a><br> <a target="_blank" rel="noopener" href="https://blog.csdn.net/adalf90/article/details/80492795">https://blog.csdn.net/adalf90/article/details/80492795</a><br> <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/335628792">https://zhuanlan.zhihu.com/p/335628792</a><br> <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/435614563">https://zhuanlan.zhihu.com/p/435614563</a></p>
-</li>
+<li>项目pom文件理解<br> jacoco-maven-plugin插件：<br> 可以生成单元测试覆盖率报告，本项目具体用途还不清楚<br> maven-source-plugin插件：<br> 负责将项目源文件打成包<br> 参考：[!<a target="_blank" rel="noopener" href="https://blog.csdn.net/liaowenxiong/article/details/124879376]">https://blog.csdn.net/liaowenxiong/article/details/124879376]</a><br> spotless插件：<br> 统一代码格式<br> 参考：[!<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_42651904/article/details/127175643">https://blog.csdn.net/qq_42651904/article/details/127175643</a><br> apache-rat-plugin插件：<br> 检查项目中的许可证信息</li>
 </ol>
-
+        
+          <p class="article-more-link">
+            <a href="/2023/07/19/InLong/InLong-code-comprehension/#more">Read More</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
@@ -482,97 +751,6 @@
 
 
   
-    <article id="post-paper/Agile-Cold-Starts-for-Scalable-Serverless" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2023/05/28/paper/Agile-Cold-Starts-for-Scalable-Serverless/" class="article-date">
-  <time class="dt-published" datetime="2023-05-28T11:10:53.000Z" itemprop="datePublished">2023-05-28</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2023/05/28/paper/Agile-Cold-Starts-for-Scalable-Serverless/">Agile-Cold-Starts-for-Scalable-Serverless</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2023/05/28/paper/Agile-Cold-Starts-for-Scalable-Serverless/" data-id="clkglot2v000dzcv68j4v7txj" data-title="Agile-Cold-Starts-for-Scalable-Serverless" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/serverless/" rel="tag">serverless</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-paper/RunD-A-Lightweight-Secure-Container-Runtime" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2023/05/28/paper/RunD-A-Lightweight-Secure-Container-Runtime/" class="article-date">
-  <time class="dt-published" datetime="2023-05-28T04:59:18.964Z" itemprop="datePublished">2023-05-28</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2023/05/28/paper/RunD-A-Lightweight-Secure-Container-Runtime/">RunD_A_Lightweight_Secure_Container_Runtime</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>[论文地址：<a target="_blank" rel="noopener" href="https://www.usenix.org/conference/atc22/presentation/li-zijun-rund]">https://www.usenix.org/conference/atc22/presentation/li-zijun-rund]</a><br>[rootfs讲解：<a target="_blank" rel="noopener" href="https://blog.csdn.net/Geffin/article/details/109741226]">https://blog.csdn.net/Geffin/article/details/109741226]</a><br>[overlayfs介绍：<a target="_blank" rel="noopener" href="https://blog.csdn.net/luckyapple1028/article/details/77916194]">https://blog.csdn.net/luckyapple1028/article/details/77916194]</a><br>[mmap介绍：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/366964820]">https://zhuanlan.zhihu.com/p/366964820]</a><br>[self-modifying-code介绍：<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_32820767/article/details/84895317]">https://blog.csdn.net/weixin_32820767/article/details/84895317]</a></p>
-<h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><pre><code>安全容器：将容器部署在microVM中
-现有问题：高密度容器部署和高并发容器启动的要求
-问题原因：cgroups和rootfs
-解决方案：轻量级的安全容器运行时RunD
-实现效果：每秒可以启动200万个安全容器，可在384GB节点上部署超2500个安全容器
-</code></pre>
-        
-          <p class="article-more-link">
-            <a href="/2023/05/28/paper/RunD-A-Lightweight-Secure-Container-Runtime/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2023/05/28/paper/RunD-A-Lightweight-Secure-Container-Runtime/" data-id="clkglot2y000kzcv6cf75cp3v" data-title="RunD_A_Lightweight_Secure_Container_Runtime" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/serverless/" rel="tag">serverless</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <nav id="page-nav">
@@ -591,7 +769,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/InLong/" rel="tag">InLong</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux%E5%AD%A6%E4%B9%A0/" rel="tag">linux学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linxu%E5%AD%A6%E4%B9%A0/" rel="tag">linxu学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/" rel="tag">maven</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/serverless/" rel="tag">serverless</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/InLong/" rel="tag">InLong</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/" rel="tag">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux%E5%AD%A6%E4%B9%A0/" rel="tag">linux学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linxu%E5%AD%A6%E4%B9%A0/" rel="tag">linxu学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/" rel="tag">maven</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/serverless/" rel="tag">serverless</a></li></ul>
     </div>
   </div>
 
@@ -601,7 +779,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/InLong/" style="font-size: 20px;">InLong</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/linux%E5%AD%A6%E4%B9%A0/" style="font-size: 15px;">linux学习</a> <a href="/tags/linxu%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">linxu学习</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/serverless/" style="font-size: 20px;">serverless</a>
+      <a href="/tags/InLong/" style="font-size: 20px;">InLong</a> <a href="/tags/Java/" style="font-size: 15px;">Java</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/linux%E5%AD%A6%E4%B9%A0/" style="font-size: 15px;">linux学习</a> <a href="/tags/linxu%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">linxu学习</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/serverless/" style="font-size: 20px;">serverless</a>
     </div>
   </div>
 
@@ -623,6 +801,14 @@
       <ul>
         
           <li>
+            <a href="/2023/07/27/Java/Java/">Java语言</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/26/Java/JDBC/">JDBC</a>
+          </li>
+        
+          <li>
             <a href="/2023/07/23/docker-dockerCompose/docker-dockerCompose-%E5%AD%A6%E4%B9%A0/">docker-dockerCompose-学习</a>
           </li>
         
@@ -632,14 +818,6 @@
         
           <li>
             <a href="/2023/07/19/InLong/InLong-code-comprehension/">InLong-code-comprehension</a>
-          </li>
-        
-          <li>
-            <a href="/2023/07/16/InLong/InLong-Learning/">InLong Learning</a>
-          </li>
-        
-          <li>
-            <a href="/2023/07/15/linux/%E9%98%BF%E9%87%8C%E4%BA%91%E8%AF%BE%E7%A8%8B-linux%E5%85%A5%E9%97%A8-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%EF%BC%88%E4%B8%89%EF%BC%89/">阿里云课程-linux入门-学习记录（三）</a>
           </li>
         
       </ul>

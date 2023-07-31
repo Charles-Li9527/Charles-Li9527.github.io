@@ -14,7 +14,7 @@
 <meta property="og:description" content="1.linux服务器运维基本操作一、配置ssh免密登录原理：     1.首先在客户端C生成一对密钥 ssh-genkey -t rsa     2.将公钥拷贝给服务端S ssh-copy-id 服务端S的ip（首次登陆需要密码）     3.当C向S发送连接请求时（用户名+ip），C会用公钥进行加密，S进行解密，然后随机生成字符串给C，C将解密后的字符串发给S，二者完成互相确认身份，S允许C免密">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-07-15T10:41:48.000Z">
-<meta property="article:modified_time" content="2023-07-23T03:48:05.803Z">
+<meta property="article:modified_time" content="2023-07-31T07:09:05.325Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="linux学习">
 <meta name="twitter:card" content="summary">
@@ -152,7 +152,143 @@ crontab [-u user] [-e | -l | -r]
     30 21 * * * /usr/local/etc/rc.d/httpd restart
     每晚21:30重启apache
 </code></pre>
+<h1 id="2-LVS负载均衡实战——Linux-Virtual-Server"><a href="#2-LVS负载均衡实战——Linux-Virtual-Server" class="headerlink" title="2.LVS负载均衡实战——Linux Virtual Server"></a>2.LVS负载均衡实战——Linux Virtual Server</h1><h2 id="一、集群和分布式"><a href="#一、集群和分布式" class="headerlink" title="一、集群和分布式"></a>一、集群和分布式</h2><pre><code>集群：
+    分为三种类型：
+        LB：
+            负载均衡，多个主机组成，每个主机只承担一部分访问请求
+        HA：
+            高可用，避免单点故障
+            A = 正常时间 / (正常时间+故障时间)，有0.99,0.999,0.9999,0.99999等标准
+            SLA：
+                服务等级协议，是服务提供商与用户间定一个一种双方认可的协定，一般就通过三个9、四个9等来表示
+        HPC：
+            高性能
+集群与分布式：
+    集群：
+        同一个业务系统，部署在多台服务器上。集群中，每一台服务器实现的功能没有差别，数据和代码都是一样的
+    分布式：
+        一个业务被拆分成多个子业务，部署在多态服务器上。分布式中，每一服务器实现的功能是有差别的，数据和代码也是不一样的。
 
+    分布式是以缩短单个任务的执行时间来提升效率的，而集群则是通过提高单位时间内执行的任务数来提升效率。
+分布式系统：
+    分布式存储：Ceph、GlusterFS、MogileFS
+    分布式计算：hadoop、Spark
+</code></pre>
+<h2 id="二、Linux-Virtual-Server简介"><a href="#二、Linux-Virtual-Server简介" class="headerlink" title="二、Linux Virtual Server简介"></a>二、Linux Virtual Server简介</h2><pre><code>LVS介绍：
+    LVS，Linux Virtual Server，负载调度器，内核集成，阿里的四层SLB（server load balance）是基于LVS+keepalived实现的
+
+LVS集群中的术语：
+    VS：Virtual Server，用于负载均衡调度
+    RS：Real Server，集群中的实际工作服务器
+    CIP：Client IP，客户端IP
+    VIP：Virtual Server IP，VS面向外网的IP
+    DIP：Director IP，VS面向内网的IP
+    RIP：Real server IP，实际工作服务器的IP
+    访问流程：
+        CIP &lt;--&gt; VIP == DIP &lt;--&gt;RIP
+
+LVS工作模式：
+    lvs-nat：修改请求报文的目标IP，多目标IP的DNAT（动态NAT）
+    lvs-dr：操纵封装新的MAC地址
+    lvs-tun：在原请求IP报文之外新加一个IP首部
+    lvs-fullnat：修改请求报文的源IP和目标IP
+
+    lvs-nat模式：
+        本质是多目标IP的DNAT，通过将请求报文中的目标地址和目标端口修改为某RS的RIP和PORT实现转发
+        1）RIP和DIP建议放在同一个IP网段，使用私网地址，RS的网关要指向DIP
+        2）请求报文和响应报文都必须经由VS转发，VS易成为系统瓶颈
+        3）支持端口映射，可修改报文的目标PORT
+        4）VS必须是Linux系统，RS可以是任意OS系统
+    ![lvs-nat原理图](lvs-nat原理图.png)
+        lvs在内核中工作的阶段是2和3：
+            ![lvs内核工作阶段](lvs内核工作阶段.png)
+    
+    lvs-dr模式:
+        Direct Routing，直接路由，LVS默认模式，应用最为广泛。通过为请求报文重新封装一个MAC首部进行转发，源MAC是DIP所在接口的MAC，目标MAC是被选中的RS的RIP所在接口的MAC。
+        优点：
+            DR模式，在回复包时，不经过VS，减少了VS负载
+        缺点：
+            数据报链路层以上都不修改，所以源/目标的IP/PORT都不改变，无法进行端口映射，即客户机要访问80端口，目标机只能让出80端口被访问
+        计网知识遗忘：
+            数据报经过路由器的时候，源IP和目标IP是不会发生变化的，只有MAC会变化；只有NAT转换才会改变源/目标IP
+    ![lvs-dr模式原理图](./lvs-dr模式原理图.png)
+
+        DR模式的特点：
+            1）VS和各RS都配置有VIP
+            2）确保前端路由器将目标IP为VIP的请求报文发往VS
+                由于RS上既有物理网卡IP，又配置了VIP，所以会与VS的VIP产生地址冲突，有以下三种方式来避免地址冲突：
+                    i)在前端网关做静态绑定VIP和VS的MAC地址
+                        缺点是静态绑定，一旦换了路由器，就要重新绑定，不常用
+                    ii)在RS上使用arptables工具——也不常用
+                    <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">arptables -A IN -d $VIP -j DROP</span><br><span class="line">arptables -A OUT -s $VIP mangle --mangle-ip-s $RIP</span><br></pre></td></tr></table></figure>
+                    iii）在RS上修改内核参数，以限制arp通告及应答级别————常用
+                    <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">不让RS的lo回环网卡（VIP配置在lo上）应答arp报文</span><br><span class="line">/proc/sys/net/ipv4/conf/all/arp_ignore </span><br><span class="line">/proc/sys/net/ipv4/conf/lo/arp_ignore </span><br><span class="line">不让RS的lo回环网卡（VIP配置在lo上）发出arp报文</span><br><span class="line">/proc/sys/net/ipv4/conf/all/arp_announce</span><br><span class="line">/proc/sys/net/ipv4/conf/lo/arp_announce</span><br></pre></td></tr></table></figure>
+                    修改以上几个文件，可以使VIP称为RS的私有IP，外界不知道，只有VS知道
+
+            3）RS的RIP可以使用私网地址，也可以是公网地址；RIP与DIP在同一IP网络；RIP的网关不能指向DIP，以确保响应报文不会经由VS
+            4）RS和VS要在同一个物理网络
+            5）请求报文要经由VS，但响应报文不经由VS，而由RS直接发往Client
+            6）不支持端口映射
+            7）无需开启ip_forward，参考[!https://www.jianshu.com/p/134eeae69281]
+            8）RS可使用大多数OS系统
+
+            物理网卡eth0（实际网卡）、回环网卡lo（逻辑上的设备，地址稳定），参考：[!https://www.cnblogs.com/chenpython123/p/10649718.html]
+
+    ![lvs-dr通信示例](lvs-dr通信示例.png)
+
+    lvs-tun模式：
+        相比于DR模式，TUN模式不要求DIP和RIP在同一网段
+        转发方式：
+            不修改请求报文的IP首部（源IP为CIP，目标IP为VIP），而在原IP报文之外再封装一个IP首部（源IP是DIP，目标IP是RIP），将报文发往挑选出的目标RS；RS直接响应给客户端【源IP是VIP（所以每个RS也都有VIP），目标IP是CIP]
+        ![lvs-tun模式原理图](./lvs-tun模式原理图.png)
+
+        TUN模式特点：
+            1）RIP和DIP可以不处于同一物理网络，即集群节点可以跨互联网连接，DIP VIP RIP可以是公网地址
+            2）RS的tun接口上需要配置VIP地址，一遍接收VS转发过来的数据包，以及作为响应报文的源IP
+            3）VS转发给RS时需要借助隧道，因此RS的OS需要支持隧道功能
+            4）不支持端口映射
+            5）请求报文经过VS，响应由RS自己完成
+        应用场景：
+            TUN模式常用来负载调度缓存服务器组，这些缓存服务器一般放置在不同网络环境中，可以就近折返给客户端
+            LAN环境一般用DR模式，WAN环境虽然可以用TUN模式，但是更常用nginx/DNS等实现，因此TUN模式实际应用很少
+    
+    lvs工作模式总结和比较：
+        ![](lvs工作模式总结和比较.png)
+    
+LVS调度算法：
+    分为静态方法和动态方法
+
+    静态方法：
+        1）RR:roundrobin，轮询，较常用
+        2）WRR：Weighted RR，加权轮询，较常用
+        3）SH：Source Hashing，源IP地址hash，实现session sticky；将来自于同一个IP地址的请求始终发往第一次挑中的RS，从而实现会话绑定
+        4）DH：Destination Hashing，目标地址hash；第一次轮询调度至RS，后续将发往同一个目标地址的请求始终发至第一次挑中的RS；典型适用场景是正向代理缓存场景中的负载均衡，如：Web缓存
+
+    动态方法：
+        主要根据每个RS当前的负载状态及调度算法，将overhead=value值较小的RS进行调度
+        1）LC：least connections 适用于长连接应用
+        <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Overhead = activecoons * 256 + inactiveconns</span><br></pre></td></tr></table></figure>
+        2）WLC：Weighted LC，默认调度方法，较常用
+        <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Overhead = (activeconns * 256 + inactiveconns) / weight</span><br></pre></td></tr></table></figure>
+        3）SED：Shortest Expection Delay，初始连接高权重优先，只检查活动连接，不考虑非活动
+        <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Overhead = (acitveconns + 1) * 256 / weight</span><br></pre></td></tr></table></figure>
+        4）NQ：第一轮均匀分配，后续SED
+        5）LBLC：Locality-Based LC，动态的DH算法，
+        6）LBLCR：LBLC with Replication，带复制功能的LBLC，解决LBLC负载不均衡问题，从负载重的复制到负载轻的RS，实现web cache等
+
+LVS相关软件：
+    使用ipvsadm软件包实现相关管理，包括基础配置，RS的增删改查等
+
+NAT模式实现、DR模式实现、LVS实现：
+    略
+    
+</code></pre>
+<h1 id="3-线上linux服务器优化经验"><a href="#3-线上linux服务器优化经验" class="headerlink" title="3.线上linux服务器优化经验"></a>3.线上linux服务器优化经验</h1><h2 id="一、系统安装和分区经验与网络配置"><a href="#一、系统安装和分区经验与网络配置" class="headerlink" title="一、系统安装和分区经验与网络配置"></a>一、系统安装和分区经验与网络配置</h2><h2 id="二、线上服务器网络安全配置与系统登录安全配置"><a href="#二、线上服务器网络安全配置与系统登录安全配置" class="headerlink" title="二、线上服务器网络安全配置与系统登录安全配置"></a>二、线上服务器网络安全配置与系统登录安全配置</h2><h2 id="三、通过yum更新软件包以及常见yum源推荐"><a href="#三、通过yum更新软件包以及常见yum源推荐" class="headerlink" title="三、通过yum更新软件包以及常见yum源推荐"></a>三、通过yum更新软件包以及常见yum源推荐</h2><h2 id="四、系统资源调优与内核采纳数配置"><a href="#四、系统资源调优与内核采纳数配置" class="headerlink" title="四、系统资源调优与内核采纳数配置"></a>四、系统资源调优与内核采纳数配置</h2><h2 id="五、精简服务系统服务和开机进程"><a href="#五、精简服务系统服务和开机进程" class="headerlink" title="五、精简服务系统服务和开机进程"></a>五、精简服务系统服务和开机进程</h2><h2 id="六、linux故障排除思路以及影响linux性能的因素"><a href="#六、linux故障排除思路以及影响linux性能的因素" class="headerlink" title="六、linux故障排除思路以及影响linux性能的因素"></a>六、linux故障排除思路以及影响linux性能的因素</h2><h2 id="七、操作系统相关资源优化策略"><a href="#七、操作系统相关资源优化策略" class="headerlink" title="七、操作系统相关资源优化策略"></a>七、操作系统相关资源优化策略</h2><h2 id="八、linux性能优化"><a href="#八、linux性能优化" class="headerlink" title="八、linux性能优化"></a>八、linux性能优化</h2><pre><code>cpu新能评估工具
+内存性能评估工具
+磁盘新能评估
+网络性能评估
+</code></pre>
+<h2 id="九、系统无法执行su操作案例"><a href="#九、系统无法执行su操作案例" class="headerlink" title="九、系统无法执行su操作案例"></a>九、系统无法执行su操作案例</h2><h2 id="十、read-only-file-system问题"><a href="#十、read-only-file-system问题" class="headerlink" title="十、read-only file system问题"></a>十、read-only file system问题</h2><h2 id="十一、基于动态静态内容结合的网站优化案例"><a href="#十一、基于动态静态内容结合的网站优化案例" class="headerlink" title="十一、基于动态静态内容结合的网站优化案例"></a>十一、基于动态静态内容结合的网站优化案例</h2><h2 id="十二、Tomcat-JVM参数优化策略"><a href="#十二、Tomcat-JVM参数优化策略" class="headerlink" title="十二、Tomcat JVM参数优化策略"></a>十二、Tomcat JVM参数优化策略</h2>
       
     </div>
     <footer class="article-footer">
@@ -200,7 +336,7 @@ crontab [-u user] [-e | -l | -r]
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/InLong/" rel="tag">InLong</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux%E5%AD%A6%E4%B9%A0/" rel="tag">linux学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linxu%E5%AD%A6%E4%B9%A0/" rel="tag">linxu学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/" rel="tag">maven</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/serverless/" rel="tag">serverless</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/InLong/" rel="tag">InLong</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/" rel="tag">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux%E5%AD%A6%E4%B9%A0/" rel="tag">linux学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linxu%E5%AD%A6%E4%B9%A0/" rel="tag">linxu学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/" rel="tag">maven</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/serverless/" rel="tag">serverless</a></li></ul>
     </div>
   </div>
 
@@ -210,7 +346,7 @@ crontab [-u user] [-e | -l | -r]
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/InLong/" style="font-size: 20px;">InLong</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/linux%E5%AD%A6%E4%B9%A0/" style="font-size: 15px;">linux学习</a> <a href="/tags/linxu%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">linxu学习</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/serverless/" style="font-size: 20px;">serverless</a>
+      <a href="/tags/InLong/" style="font-size: 20px;">InLong</a> <a href="/tags/Java/" style="font-size: 15px;">Java</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/linux%E5%AD%A6%E4%B9%A0/" style="font-size: 15px;">linux学习</a> <a href="/tags/linxu%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">linxu学习</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/serverless/" style="font-size: 20px;">serverless</a>
     </div>
   </div>
 
@@ -232,6 +368,14 @@ crontab [-u user] [-e | -l | -r]
       <ul>
         
           <li>
+            <a href="/2023/07/27/Java/Java/">Java语言</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/26/Java/JDBC/">JDBC</a>
+          </li>
+        
+          <li>
             <a href="/2023/07/23/docker-dockerCompose/docker-dockerCompose-%E5%AD%A6%E4%B9%A0/">docker-dockerCompose-学习</a>
           </li>
         
@@ -241,14 +385,6 @@ crontab [-u user] [-e | -l | -r]
         
           <li>
             <a href="/2023/07/19/InLong/InLong-code-comprehension/">InLong-code-comprehension</a>
-          </li>
-        
-          <li>
-            <a href="/2023/07/16/InLong/InLong-Learning/">InLong Learning</a>
-          </li>
-        
-          <li>
-            <a href="/2023/07/15/linux/%E9%98%BF%E9%87%8C%E4%BA%91%E8%AF%BE%E7%A8%8B-linux%E5%85%A5%E9%97%A8-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%EF%BC%88%E4%B8%89%EF%BC%89/">阿里云课程-linux入门-学习记录（三）</a>
           </li>
         
       </ul>

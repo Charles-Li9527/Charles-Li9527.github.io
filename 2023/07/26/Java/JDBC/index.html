@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>JDBC | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="serverlet：消息接收、处理和响应JSP：页面的动态显示Ajax：异步请求 1.JDBC概述一、Java中的数据存储技术在Java中，数据库存取技术可分为如下几类：     JDBC直接访问数据库     JDO(Java Data Object)技术     第三方O&#x2F;R工具，如Hibernate、Mybatis JDBC是Java访问数据库的基石，JDO、Hibernate、MyBati">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JDBC">
+<meta property="og:url" content="http://example.com/2023/07/26/Java/JDBC/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="serverlet：消息接收、处理和响应JSP：页面的动态显示Ajax：异步请求 1.JDBC概述一、Java中的数据存储技术在Java中，数据库存取技术可分为如下几类：     JDBC直接访问数据库     JDO(Java Data Object)技术     第三方O&#x2F;R工具，如Hibernate、Mybatis JDBC是Java访问数据库的基石，JDO、Hibernate、MyBati">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-07-26T03:49:54.000Z">
+<meta property="article:modified_time" content="2023-07-30T04:10:00.038Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-Java/JDBC" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2023/07/26/Java/JDBC/" class="article-date">
+  <time class="dt-published" datetime="2023-07-26T03:49:54.000Z" itemprop="datePublished">2023-07-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      JDBC
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>serverlet：消息接收、处理和响应<br>JSP：页面的动态显示<br>Ajax：异步请求</p>
+<h1 id="1-JDBC概述"><a href="#1-JDBC概述" class="headerlink" title="1.JDBC概述"></a>1.JDBC概述</h1><h2 id="一、Java中的数据存储技术"><a href="#一、Java中的数据存储技术" class="headerlink" title="一、Java中的数据存储技术"></a>一、Java中的数据存储技术</h2><pre><code>在Java中，数据库存取技术可分为如下几类：
+    JDBC直接访问数据库
+    JDO(Java Data Object)技术
+    第三方O/R工具，如Hibernate、Mybatis
+JDBC是Java访问数据库的基石，JDO、Hibernate、MyBatis等只是更好的封装了JDBC
+</code></pre>
+<h2 id="二、JDBC介绍"><a href="#二、JDBC介绍" class="headerlink" title="二、JDBC介绍"></a>二、JDBC介绍</h2><pre><code>JDBC是一个独立于特定数据库管理系统、通用的SQL数据库存取和操作的公共接口（一组API），定义了用来访问数据库的标准Java类库，运行模式为：
+    数据库厂商提供JDBC驱动程序，Java程序员直接调用统一API，大大加快开发过程
+JDBC本质：
+    一组规范、接口
+</code></pre>
+<h2 id="三、JDBC体系结构"><a href="#三、JDBC体系结构" class="headerlink" title="三、JDBC体系结构"></a>三、JDBC体系结构</h2><pre><code>JDBC接口包括两个层次：
+    面向程序员的API：Java API，抽象接口，供应用程序开发人员使用
+    面向数据库的API：Java Driver API，供开发商开发数据库驱动程序使用
+</code></pre>
+<h1 id="2-获取数据库连接"><a href="#2-获取数据库连接" class="headerlink" title="2.获取数据库连接"></a>2.获取数据库连接</h1><p>IDEA通过maven以JDBC方式连接Mysql数据库：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/dadian/p/11938707.html">https://www.cnblogs.com/dadian/p/11938707.html</a><br>Java中Class.ForName()的理解：<br>    <a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_22059611/article/details/84347957">https://blog.csdn.net/qq_22059611/article/details/84347957</a><br>    <a target="_blank" rel="noopener" href="https://blog.csdn.net/hbiao68/article/details/17113987">https://blog.csdn.net/hbiao68/article/details/17113987</a></p>
+<h1 id="3-使用PreparedStatement实现CRUD操作"><a href="#3-使用PreparedStatement实现CRUD操作" class="headerlink" title="3.使用PreparedStatement实现CRUD操作"></a>3.使用PreparedStatement实现CRUD操作</h1><h2 id="一、操作和访问数据库"><a href="#一、操作和访问数据库" class="headerlink" title="一、操作和访问数据库"></a>一、操作和访问数据库</h2><pre><code>Statement：用于执行静态SQL语句，并返回他生成的结构
+PreparedStatement：SQL语句被预编译并存储在此对象中，可以使用此对象多次高效地执行该语句
+CallableStatement：用于执行SQL存储过程
+</code></pre>
+<h2 id="二、使用Statement操作数据表的弊端"><a href="#二、使用Statement操作数据表的弊端" class="headerlink" title="二、使用Statement操作数据表的弊端"></a>二、使用Statement操作数据表的弊端</h2><pre><code>1）存在拼串操作，繁琐
+2）存在SQL注入问题
+    指利用某些系统没有对用户输入的数据进行充分的检查，而在用户输入数据中注入非法的SQL语句段或命令，从而利用系统的SQL引擎完成恶意行为的做法
+</code></pre>
+<h2 id="三、PreparedStatement的使用"><a href="#三、PreparedStatement的使用" class="headerlink" title="三、PreparedStatement的使用"></a>三、PreparedStatement的使用</h2><pre><code>介绍：
+    PreparedStatement接口是Statement的子接口，他表示一条预编译过的SQL语句
+PreparedStatement VS Statement：
+    1）前者可读性和可维护性更高
+    2）前者能最大可能提高性能：
+        DBServer会对预编译语句提供性能优化
+    3）前者可以防止SQL注入
+</code></pre>
+<h2 id="四、ResultSet与ResultMetaData"><a href="#四、ResultSet与ResultMetaData" class="headerlink" title="四、ResultSet与ResultMetaData"></a>四、ResultSet与ResultMetaData</h2><pre><code>ResultSet：
+    ResultSet返回的实际上就是一张数据表，有一个指针指向数据表的第一条记录
+ResultSetMetaData：
+    可以用于获取关于ResultSet对象中列的类型和属性信息
+</code></pre>
+<h2 id="五、资源的释放"><a href="#五、资源的释放" class="headerlink" title="五、资源的释放"></a>五、资源的释放</h2><pre><code>需要释放：ResultSet、Statement、Connection
+</code></pre>
+<h2 id="六、JDBC-API小结"><a href="#六、JDBC-API小结" class="headerlink" title="六、JDBC API小结"></a>六、JDBC API小结</h2><pre><code>两种思想：
+    面向接口编程的思想
+    ORM思想（Object Relational Mapping）
+        一个数据表对应一个java类
+        表中的一条记录对应java类的一个对象
+        表中的一个字段对应java类的一个属性
+两种技术：
+    JDBC结果集的元数据：ResultSetMetaData
+    通过反射，创建指定类的对象，获取指定的属性并赋值
+</code></pre>
+<h1 id="4-操作BLOB类型字段"><a href="#4-操作BLOB类型字段" class="headerlink" title="4.操作BLOB类型字段"></a>4.操作BLOB类型字段</h1><pre><code>MySQL BLOB类型：
+
+向数据表中插入大数据类型：
+
+修改数据表中的Blob类型字段：
+
+从数据表中读取大数据类型：
+</code></pre>
+<h1 id="5-批量插入"><a href="#5-批量插入" class="headerlink" title="5.批量插入"></a>5.批量插入</h1><pre><code>批量执行SQL语句：
+
+高效的批量插入：
+</code></pre>
+<h1 id="6-数据库事务"><a href="#6-数据库事务" class="headerlink" title="6.数据库事务"></a>6.数据库事务</h1><pre><code>数据库事务介绍：
+
+JDBC事务处理：
+
+事务的ACID属性：
+</code></pre>
+<h1 id="7-DAO及相关实现类"><a href="#7-DAO及相关实现类" class="headerlink" title="7.DAO及相关实现类"></a>7.DAO及相关实现类</h1><h1 id="8-数据库连接池"><a href="#8-数据库连接池" class="headerlink" title="8.数据库连接池"></a>8.数据库连接池</h1><pre><code>JDBC数据库连接池的必要性：
+
+数据库连接池技术：
+
+多种开源的数据库连接池：
+</code></pre>
+<h1 id="9-Apache-DBUtils实现CRUD操作"><a href="#9-Apache-DBUtils实现CRUD操作" class="headerlink" title="9.Apache-DBUtils实现CRUD操作"></a>9.Apache-DBUtils实现CRUD操作</h1><pre><code>Apache-DBUtils简介：
+
+主要API的使用：
+</code></pre>
+<h1 id="10-JDBC总结"><a href="#10-JDBC总结" class="headerlink" title="10.JDBC总结"></a>10.JDBC总结</h1>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/07/26/Java/JDBC/" data-id="clkqj5jtc0001psv6718x3ywy" data-title="JDBC" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/" rel="tag">Java</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2023/07/27/Java/Java/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Java语言
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2023/07/23/docker-dockerCompose/docker-dockerCompose-%E5%AD%A6%E4%B9%A0/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">docker-dockerCompose-学习</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/InLong/" rel="tag">InLong</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/" rel="tag">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux%E5%AD%A6%E4%B9%A0/" rel="tag">linux学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linxu%E5%AD%A6%E4%B9%A0/" rel="tag">linxu学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/" rel="tag">maven</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/serverless/" rel="tag">serverless</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/InLong/" style="font-size: 20px;">InLong</a> <a href="/tags/Java/" style="font-size: 15px;">Java</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/linux%E5%AD%A6%E4%B9%A0/" style="font-size: 15px;">linux学习</a> <a href="/tags/linxu%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">linxu学习</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/serverless/" style="font-size: 20px;">serverless</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">July 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">May 2023</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/07/27/Java/Java/">Java语言</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/26/Java/JDBC/">JDBC</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/23/docker-dockerCompose/docker-dockerCompose-%E5%AD%A6%E4%B9%A0/">docker-dockerCompose-学习</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/23/maven/maven-%E5%AD%A6%E4%B9%A0/">maven 学习</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/19/InLong/InLong-code-comprehension/">InLong-code-comprehension</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2023 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
